@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>test_pic</title>
+    <link href="/2021/05/17/test-pic/"/>
+    <url>/2021/05/17/test-pic/</url>
+    
+    <content type="html"><![CDATA[<p>图片测试</p><hr><p><img src="test-pic/1.jpg" alt="test1"></p><p><img src="test-pic/2.jpg" alt="test1"></p><p><img src="test-pic/3.gif" alt="test1"></p><p><img src="test-pic/4.gif" alt="test1"></p><p><img src="test-pic/5.jpg" alt="test1"></p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>test</title>
     <link href="/2021/05/16/test/"/>
     <url>/2021/05/16/test/</url>
