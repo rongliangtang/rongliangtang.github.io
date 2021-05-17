@@ -4,11 +4,11 @@
   
   
   <entry>
-    <title>test_pic</title>
-    <link href="/2021/05/17/test-pic/"/>
-    <url>/2021/05/17/test-pic/</url>
+    <title>test_pic1</title>
+    <link href="/2021/05/17/test-pic1/"/>
+    <url>/2021/05/17/test-pic1/</url>
     
-    <content type="html"><![CDATA[<p>图片测试</p><hr><p><img src="/.com//1.jpg" alt="test1"></p><p><img src="/.com//2.jpg" alt="test1"></p><p><img src="/.com//3.gif" alt="test1"></p><p><img src="/.com//4.gif" alt="test1"></p><p><img src="/.com//5.jpg" alt="test1"></p>]]></content>
+    <content type="html"><![CDATA[<p>图片测试</p><hr><p><img src="/.io//1.jpg" alt="test1"></p><p><img src="/.io//2.jpg" alt="test1"></p><p><img src="/.io//3.gif" alt="test1"></p><p><img src="/.io//4.gif" alt="test1"></p><p><img src="/.io//5.jpg" alt="test1"></p>]]></content>
     
     
     
