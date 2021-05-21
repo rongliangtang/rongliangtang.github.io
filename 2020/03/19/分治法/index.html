@@ -18,7 +18,7 @@
   <meta name="author" content="tangrl">
   <meta name="keywords" content="">
   
-  <title>关于 - Liang&#39;s Blog</title>
+  <title>分治法 - Liang&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -34,6 +34,8 @@
     
   
 
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
   
 
 
@@ -62,7 +64,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -173,9 +175,46 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.1)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="关于">
+            <span class="h2" id="subtitle" title="分治法">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2020-03-19 17:30" pubdate>
+        2020年3月19日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      682 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      7
+       分钟
+    </span>
+  
+
+  
+  
+</div>
 
             
           </div>
@@ -188,81 +227,123 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-            <div class="about-avatar">
-              <img src="/public/images/head.JPG" srcset="/img/loading.gif" lazyload
-                   class="img-fluid" alt="avatar">
-            </div>
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
+      
 
-<div class="text-center">
-  <div class="about-info">
-    <div class="about-name">Liang</div>
-    <div class="about-intro">一无所知的世界,走下去才有惊喜。</div>
-    <div class="about-icons">
-      
-        
-        
-        
-        <a href=https://github.com/rongliangtang class="
-           hint--bottom hint--rounded"
-           aria-label=GitHub
-           target="_blank"
-        >
-          <i class="iconfont icon-github-fill" aria-hidden="true"></i>
-          
-        </a>
-      
-        
-        
-        
-        <a href=https://space.bilibili.com/28159312 class="
-           hint--bottom hint--rounded"
-           aria-label=bilibili
-           target="_blank"
-        >
-          <i class="iconfont icon-bilibili-fill" aria-hidden="true"></i>
-          
-        </a>
-      
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">分治法</h1>
+            
+            <div class="markdown-body">
+              <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>这学期学算法设计与分析，因为在家看直播学效率不如在学校高，故在此记录学习过程中遇到的问题和学到的东西，希望能帮助到别人也能帮助自己更加牢固的掌握知识。</p>
+<hr>
+<h3 id="分治法是什么"><a href="#分治法是什么" class="headerlink" title="分治法是什么"></a>分治法是什么</h3><p>分治法，顾名思义就是分而治之，即将一个大问题分解为若干个不相交的同类型的小问题,分别解决每个小问题(因为是同类型的问题,所以可以递归地求解;当问题规模足够小时,就直接求解),然后将得到的结果重新组合成为大问题的解。</p>
+<p>简而言之，分治法的基本思想：将一个难以直接解决的大问题，分割成一些规模较小的相同问题，以便各个击破，分而治之。</p>
+<hr>
+<h3 id="使用分治法解决问题的步骤"><a href="#使用分治法解决问题的步骤" class="headerlink" title="使用分治法解决问题的步骤"></a>使用分治法解决问题的步骤</h3><p>(1) 分: 将原问题分解为同类型不相交的若干子问题<br>(2) 治: 递归地解决这些子问题;当规模足够小时,可以直接求解<br>(3) 合: 将子问题的解合并为原问题的解</p>
+<hr>
+<h3 id="分治法适用情况"><a href="#分治法适用情况" class="headerlink" title="分治法适用情况"></a>分治法适用情况</h3><p>如果原问题可以分割成k个子问题，1&lt;k&lt;=n，且这些子问题均可解并且利用这些子问题的解求出原问题的解，那么分治方法就是可行的。<br>例如，二分查找就是可以用分治法的典型问题。第一步 分: 如果中位元素不是要找的,将n个元素的序列分成两个含有n/2个元素的子序列 。第二步 治: 递归查找其中⼀一个子序列直到序列只有一个元素 。第三步 合: 返回查找结果。</p>
+<hr>
+<h3 id="分治法的复杂性分析"><a href="#分治法的复杂性分析" class="headerlink" title="分治法的复杂性分析"></a>分治法的复杂性分析</h3><p>这里以归并排序为例，使用分治法时归并排序的时间复杂度如下<img class="alignnone size-full wp-image-363" src="/2020/03/19/%E5%88%86%E6%B2%BB%E6%B3%95/捕获-1.png" srcset="/img/loading.gif" lazyload alt width="472" height="120"><br>那么如何算出T(n)呢，这里我推荐两种方法</p>
+<p>法一：递归树法<img class="alignnone size-large wp-image-364" src="/2020/03/19/%E5%88%86%E6%B2%BB%E6%B3%95/Note-Mar-2-2020-786x1024.jpg" srcset="/img/loading.gif" lazyload alt width="525" height="684"></p>
+<p>法二：数学运算法</p>
+<img class="alignnone size-full wp-image-365" src="/2020/03/19/%E5%88%86%E6%B2%BB%E6%B3%95/20190512163406777.png" srcset="/img/loading.gif" lazyload alt width="851" height="396">
+
+<img class="alignnone size-full wp-image-365" src="/2020/03/19/%E5%88%86%E6%B2%BB%E6%B3%95/20190512163406777.png" srcset="/img/loading.gif" lazyload alt width="851" height="396">
+
+<hr>
+<h3 id="分治法主定理"><a href="#分治法主定理" class="headerlink" title="分治法主定理"></a>分治法主定理</h3><img class="alignnone size-large wp-image-366" src="/2020/03/19/%E5%88%86%E6%B2%BB%E6%B3%95/捕获-2-1024x660.png" srcset="/img/loading.gif" lazyload alt width="525" height="338">
+
+<p>打扰了，上面那张图是我们老师上课的时候给我们放的，翻译成人话就是</p>
+<img class="alignnone size-full wp-image-367" src="/2020/03/19/%E5%88%86%E6%B2%BB%E6%B3%95/捕获-3.png" srcset="/img/loading.gif" lazyload alt width="1004" height="354">
+
+<p>还是打扰了，其实简单理解一下就是</p>
+<img class="alignnone size-full wp-image-368" src="/2020/03/19/%E5%88%86%E6%B2%BB%E6%B3%95/捕获-4.png" srcset="/img/loading.gif" lazyload alt width="1064" height="266">
+
+<p>有了主定理，我们进行时间复杂度的求解只需把中心放在T(n)表达式的求解上</p>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>学习分治法，你应该知道其使用的条件，如何写出T(n)表达式，如何解出T(n)，掌握分治法主定理。</p>
+<p>如果需要更多实例去理解，可以自行百度搜索，根据例子去理解动手，是最有效的方法。</p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2020/04/11/%E5%8E%9F%E7%94%9Fnodejs%E5%86%99%E5%8D%9A%E5%AE%A2%E5%90%8E%E7%AB%AF/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">原生nodejs写博客后端</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2020/03/04/%E5%9C%A8Github%E4%B8%8A%E6%9B%B4%E7%B2%BE%E5%87%86%E7%9A%84%E6%89%BE%E5%88%B0%E6%83%B3%E8%A6%81%E7%9A%84%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/">
+                        <span class="hidden-mobile">在Github上更精准的找到想要的开源项目</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
     </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
   </div>
 </div>
 
-<article class="about-content page-content mt-5">
-  <div class="markdown-body">
-    <div class="note note-info">
-            <p>二十年来心中满怀感激，愿我们都能成为心里的样子。</p>
-          </div>
-
-<h1 id="仰望星空"><a href="#仰望星空" class="headerlink" title="仰望星空"></a>仰望星空</h1><p>执着于理想，纯粹于当下。</p>
-<h1 id="目前状态"><a href="#目前状态" class="headerlink" title="目前状态"></a>目前状态</h1><p>学历🏫：本科大三，计算机科学与技术专业</p>
-<p>过去🌅：来自南方的一座古城，不大却很喜欢</p>
-<p>现在📖：准备考研中</p>
-<p>未来💻：去大厂工作，做喜欢的事情</p>
-<p>邮箱📫：<a href="mailto:&#57;&#52;&#55;&#x39;&#x32;&#53;&#49;&#56;&#57;&#64;&#113;&#113;&#46;&#x63;&#x6f;&#109;">&#57;&#52;&#55;&#x39;&#x32;&#53;&#49;&#56;&#57;&#64;&#113;&#113;&#46;&#x63;&#x6f;&#109;</a></p>
-<div class="note note-success">
-            <p>如果想联系我的话，记得发邮件哦。</p>
-          </div>
+<!-- Custom -->
 
 
-  </div>
-
-  
-</article>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     
 
     
@@ -342,7 +423,11 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.2/dist/tocbot.min.js" ></script>
 
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
 
 
 
