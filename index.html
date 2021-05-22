@@ -191,7 +191,13 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/04/22/koa2%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%8E%9F%E7%90%86/" target="_self">
+          <img src="/2020/04/22/koa2%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%8E%9F%E7%90%86/koa.jpeg" srcset="/img/loading.gif" lazyload alt="koa2中间件原理">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
         <a href="/2020/04/22/koa2%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%8E%9F%E7%90%86/" target="_self">
@@ -205,8 +211,9 @@
           
             
           
-          koa2中间件的执行koa2中间件的执行就像洋葱圈一样，从外面到最里面，再从最里面到最外面。
-123456789101112131415161718192021222324252627282930313233const Koa = require(&#x27;koa&#x27;);const app = new Koa();// loggerapp.use(async (ctx, next) =&
+          什么是中间件koa对网络请求采用了中间件的形式处理,中间件可以介入请求和相应的处理,是一个轻量级的模块,每个中间负责完成某个特定的功能。中间件的通过next函数联系,执行next()后会将控制权交给下一个中间件,如果没有有中间件没有执行next后将会沿路折返,将控制权交换给前一个中间件。官方文档将这种代码执行方式通过下面图片举例。
+
+koa2中间件的执行koa2中间件的执行就像洋葱圈一样，从外面到
         </a>
       </p>
 
@@ -242,7 +249,13 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/04/16/express%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%8E%9F%E7%90%86/" target="_self">
+          <img src="/2020/04/16/express%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%8E%9F%E7%90%86/express.jpeg" srcset="/img/loading.gif" lazyload alt="express中间件原理">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
         <a href="/2020/04/16/express%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%8E%9F%E7%90%86/" target="_self">
@@ -257,8 +270,6 @@
             
           
           前言之前在使用express的时候从来没有想过为什么可以这样写，中间件可以这样用。今天决定把中间件原理给写一遍。不多cc，直接上代码。
-
-在like-express文件中1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162
         </a>
       </p>
 
@@ -294,7 +305,13 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/04/11/%E5%8E%9F%E7%94%9Fnodejs%E5%86%99%E5%8D%9A%E5%AE%A2%E5%90%8E%E7%AB%AF/" target="_self">
+          <img src="/2020/04/11/%E5%8E%9F%E7%94%9Fnodejs%E5%86%99%E5%8D%9A%E5%AE%A2%E5%90%8E%E7%AB%AF/nodejs.png" srcset="/img/loading.gif" lazyload alt="原生nodejs写博客后端">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
         <a href="/2020/04/11/%E5%8E%9F%E7%94%9Fnodejs%E5%86%99%E5%8D%9A%E5%AE%A2%E5%90%8E%E7%AB%AF/" target="_self">
@@ -309,12 +326,6 @@
             
           
           前言用原生nodejs写一个简单博客的后端，仅供学习用，实际开发中肯定用框架好，用原生写一遍能更好帮助你理解nodejs原理，让你使用nodejs更加得心应手。
-GitHub仓库地址https://github.com/rongliangtang/nodejs-for-blog-backend
-项目实现
-数据库开发
-接口开发
-登录：cookie和session的配合来存储登录状态
-日志记录以及分析
         </a>
       </p>
 
@@ -350,7 +361,13 @@ GitHub仓库地址https://github.com/rongliangtang/nodejs-for-blog-backend
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/03/19/%E5%88%86%E6%B2%BB%E6%B3%95/" target="_self">
+          <img src="/2020/03/19/%E5%88%86%E6%B2%BB%E6%B3%95/fenzhifa.png" srcset="/img/loading.gif" lazyload alt="分治法">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
         <a href="/2020/03/19/%E5%88%86%E6%B2%BB%E6%B3%95/" target="_self">
@@ -365,9 +382,6 @@ GitHub仓库地址https://github.com/rongliangtang/nodejs-for-blog-backend
             
           
           前言这学期学算法设计与分析，因为在家看直播学效率不如在学校高，故在此记录学习过程中遇到的问题和学到的东西，希望能帮助到别人也能帮助自己更加牢固的掌握知识。
-
-分治法是什么分治法，顾名思义就是分而治之，即将一个大问题分解为若干个不相交的同类型的小问题,分别解决每个小问题(因为是同类型的问题,所以可以递归地求解;当问题规模足够小时,就直接求解),然后将得到的结果重新组合成为大问题的解。
-简而言之，分治
         </a>
       </p>
 
@@ -403,7 +417,13 @@ GitHub仓库地址https://github.com/rongliangtang/nodejs-for-blog-backend
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/03/04/%E5%9C%A8Github%E4%B8%8A%E6%9B%B4%E7%B2%BE%E5%87%86%E7%9A%84%E6%89%BE%E5%88%B0%E6%83%B3%E8%A6%81%E7%9A%84%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" target="_self">
+          <img src="/2020/03/04/%E5%9C%A8Github%E4%B8%8A%E6%9B%B4%E7%B2%BE%E5%87%86%E7%9A%84%E6%89%BE%E5%88%B0%E6%83%B3%E8%A6%81%E7%9A%84%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/github.jpg" srcset="/img/loading.gif" lazyload alt="在Github上更精准的找到想要的开源项目">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
         <a href="/2020/03/04/%E5%9C%A8Github%E4%B8%8A%E6%9B%B4%E7%B2%BE%E5%87%86%E7%9A%84%E6%89%BE%E5%88%B0%E6%83%B3%E8%A6%81%E7%9A%84%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE/" target="_self">
@@ -418,18 +438,6 @@ GitHub仓库地址https://github.com/rongliangtang/nodejs-for-blog-backend
             
           
           前言经常看到有同学在Github找项目都会直接输入名字来查找，有时候得到的搜索结果不太如自己的意。所以在这里，分享在自己平时使用的搜索技巧。
-
-开源项目的组成部分首先我们先要了解一个项目是由哪几个部分组成的。
-
-name（项目名）
-description（项目的简要描述）
-项目的源码
-README.md（介绍自己项目详细情况的markdown文件）
-
-
-
-如何更准确搜索1.按照name搜索
-1in
         </a>
       </p>
 
@@ -465,7 +473,13 @@ README.md（介绍自己项目详细情况的markdown文件）
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/02/19/vue%E5%AE%9E%E7%8E%B0%E8%AE%A1%E7%AE%97%E6%BB%9A%E5%8A%A8%E6%9D%A1%E6%BB%9A%E5%8A%A8%E9%80%9F%E5%BA%A6/" target="_self">
+          <img src="/2020/02/19/vue%E5%AE%9E%E7%8E%B0%E8%AE%A1%E7%AE%97%E6%BB%9A%E5%8A%A8%E6%9D%A1%E6%BB%9A%E5%8A%A8%E9%80%9F%E5%BA%A6/vue.png" srcset="/img/loading.gif" lazyload alt="vue实现计算滚动条滚动速度">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
         <a href="/2020/02/19/vue%E5%AE%9E%E7%8E%B0%E8%AE%A1%E7%AE%97%E6%BB%9A%E5%8A%A8%E6%9D%A1%E6%BB%9A%E5%8A%A8%E9%80%9F%E5%BA%A6/" target="_self">
@@ -479,12 +493,7 @@ README.md（介绍自己项目详细情况的markdown文件）
           
             
           
-          效果计算页面滚动效果如下
-
-思路利用滚动条监听事件和定时器，来计算滚动速度；监听事件是只要你滚动条在动就会触发的所以需要定时器来计算滚动速度。
-
-实现计算滚动速度的功能在handleScroll()函数里实现，将其挂载在mounted()&#123;&#125;中即可
-123456789101112131415161718192021222324252627282930313233handleSc
+          思路利用滚动条监听事件和定时器，来计算滚动速度；监听事件是只要你滚动条在动就会触发的所以需要定时器来计算滚动速度。
         </a>
       </p>
 
@@ -520,7 +529,13 @@ README.md（介绍自己项目详细情况的markdown文件）
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/01/20/vue%E4%B8%AD%E8%AE%BE%E7%BD%AE%E8%B7%A8%E5%9F%9F%E4%BB%A3%E7%90%86/" target="_self">
+          <img src="/2020/01/20/vue%E4%B8%AD%E8%AE%BE%E7%BD%AE%E8%B7%A8%E5%9F%9F%E4%BB%A3%E7%90%86/vue.png" srcset="/img/loading.gif" lazyload alt="vue中设置跨域代理">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
         <a href="/2020/01/20/vue%E4%B8%AD%E8%AE%BE%E7%BD%AE%E8%B7%A8%E5%9F%9F%E4%BB%A3%E7%90%86/" target="_self">
@@ -534,8 +549,7 @@ README.md（介绍自己项目详细情况的markdown文件）
           
             
           
-          设置位置config/index.js
-更改代码123456789proxyTable: &#123;      &quot;/api&quot;: &#123;        target: &quot;http://localhost:8083/test/sercherServlet&quot;,   // 要请求的后台地址        changeOrigin: true,    // 是
+          前言当前后端api地址或者端口不一样的时候，请求会出现跨域问题。
         </a>
       </p>
 
@@ -571,7 +585,13 @@ README.md（介绍自己项目详细情况的markdown文件）
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/01/16/vue%E5%AE%9E%E7%8E%B0%E6%BB%9A%E5%8A%A8%E5%88%B0%E5%BA%95%E9%83%A8%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE/" target="_self">
+          <img src="/2020/01/16/vue%E5%AE%9E%E7%8E%B0%E6%BB%9A%E5%8A%A8%E5%88%B0%E5%BA%95%E9%83%A8%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE/vue.png" srcset="/img/loading.gif" lazyload alt="vue实现滚动到底部加载数据">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
         <a href="/2020/01/16/vue%E5%AE%9E%E7%8E%B0%E6%BB%9A%E5%8A%A8%E5%88%B0%E5%BA%95%E9%83%A8%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE/" target="_self">
@@ -585,13 +605,7 @@ README.md（介绍自己项目详细情况的markdown文件）
           
             
           
-          效果最近想写个网站需要滚动加载的功能，用了element的infinite-scroll感觉局限太大，干脆自己写一个，功能如下
-
-
-原理vue实现滚动到底部加载数据的原理是监听页面滚动，当页面滚动到底部的时候，前端从后端获取分好页的数据加入到datas[]数组中，进行渲染，就实现了滚动加载的功能
-
-先了解几个关键词（1）滚动条到顶部的位置：scrollTop
-（2）当前窗口内容可视区：window
+          效果最近想写个网站需要滚动加载的功能，用了element的infinite-scroll感觉局限太大，干脆自己写一个
         </a>
       </p>
 
@@ -627,7 +641,13 @@ README.md（介绍自己项目详细情况的markdown文件）
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2020/01/13/vue%E4%B8%AD%E7%94%A8axios%E5%8F%91%E9%80%81get%E5%92%8Cpost%E8%AF%B7%E6%B1%82/" target="_self">
+          <img src="/2020/01/13/vue%E4%B8%AD%E7%94%A8axios%E5%8F%91%E9%80%81get%E5%92%8Cpost%E8%AF%B7%E6%B1%82/axios.jpeg" srcset="/img/loading.gif" lazyload alt="vue中用axios发送get和post请求">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
         <a href="/2020/01/13/vue%E4%B8%AD%E7%94%A8axios%E5%8F%91%E9%80%81get%E5%92%8Cpost%E8%AF%B7%E6%B1%82/" target="_self">
@@ -641,13 +661,7 @@ README.md（介绍自己项目详细情况的markdown文件）
           
             
           
-          安装npm install axios
-引入在main.js文件中
-12import axios from &#x27;axios&#x27;    //引入Vue.prototype.$http = axios    //挂载在属性上
-
-
-注意开发过程中因为后端和前端端口等不一样，需要设置跨域代理参考：vue中设置跨域代理
-使用get1234567891011121314151617181920
+          前言axios是一个基于 promise 的 HTTP 库。
         </a>
       </p>
 
@@ -683,7 +697,13 @@ README.md（介绍自己项目详细情况的markdown文件）
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2019/12/16/%E7%94%A8mockjs%E6%9D%A5%E6%A8%A1%E6%8B%9F%E5%90%8E%E7%AB%AF%E6%95%B0%E6%8D%AE/" target="_self">
+          <img src="/2019/12/16/%E7%94%A8mockjs%E6%9D%A5%E6%A8%A1%E6%8B%9F%E5%90%8E%E7%AB%AF%E6%95%B0%E6%8D%AE/mockjs.jpeg" srcset="/img/loading.gif" lazyload alt="vue用mockjs来模拟后端数据">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
         <a href="/2019/12/16/%E7%94%A8mockjs%E6%9D%A5%E6%A8%A1%E6%8B%9F%E5%90%8E%E7%AB%AF%E6%95%B0%E6%8D%AE/" target="_self">
@@ -698,18 +718,6 @@ README.md（介绍自己项目详细情况的markdown文件）
             
           
           什么是mockjs前端编写代码的时候，可以用mockjs来生成随机数据，拦截 Ajax 请求。
-官网
-
-使用mockjs①利用vue-cli创建项目
-1npm i create vue-mock
-
-②安装mockjs和axios，进入到项目文件夹中
-12npm i mockjsnpm i axios
-
-③在src中创建mock文件夹并建立index.js文件
-````
-④index.js文件中
-1
         </a>
       </p>
 

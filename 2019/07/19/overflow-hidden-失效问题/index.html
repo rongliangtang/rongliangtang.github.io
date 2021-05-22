@@ -14,7 +14,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="">
+  <meta name="description" content="失效原因今天在写轮播图的时候发现，overflow;hidden;竟然能失效，发现原因如下：父元素想要隐藏溢出的绝对定位的子元素，需要给父元素加一个定位;因为绝对定位的子元素会从内向外寻找有定位的父元素，找不到的话overflow:hidden;也会随之失效。">
   <meta name="author" content="tangrl">
   <meta name="keywords" content="">
   
@@ -241,6 +241,8 @@
             
             <div class="markdown-body">
               <h3 id="失效原因"><a href="#失效原因" class="headerlink" title="失效原因"></a>失效原因</h3><p>今天在写轮播图的时候发现，overflow;hidden;竟然能失效，发现原因如下：父元素想要隐藏溢出的绝对定位的子元素，需要给父元素加一个定位;因为绝对定位的子元素会从内向外寻找有定位的父元素，找不到的话overflow:hidden;也会随之失效。</p>
+<span id="more"></span>
+
 <hr>
 <h3 id="一探究竟"><a href="#一探究竟" class="headerlink" title="一探究竟"></a>一探究竟</h3><p>重要的事再说一遍，正如上述所言，overflow:hidden;失效的原因是：父元素想要隐藏溢出的绝对定位的子元素，需要给父元素加一个定位;因为绝对定位的子元素会从内向外寻找有定位的父元素，找不到的话overflow:hidden;也会随之失效。</p>
 <p>下面我们来试试：</p>

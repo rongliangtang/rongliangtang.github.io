@@ -197,7 +197,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      647 字
+      791 字
     </span>
   
 
@@ -207,7 +207,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      10
+      11
        分钟
     </span>
   
@@ -240,7 +240,9 @@
             <h1 style="display: none">koa2中间件原理</h1>
             
             <div class="markdown-body">
-              <h3 id="koa2中间件的执行"><a href="#koa2中间件的执行" class="headerlink" title="koa2中间件的执行"></a>koa2中间件的执行</h3><p>koa2中间件的执行就像洋葱圈一样，从外面到最里面，再从最里面到最外面。</p>
+              <h3 id="什么是中间件"><a href="#什么是中间件" class="headerlink" title="什么是中间件"></a>什么是中间件</h3><p>koa对网络请求采用了中间件的形式处理,中间件可以介入请求和相应的处理,是一个轻量级的模块,每个中间负责完成某个特定的功能。中间件的通过<code>next</code>函数联系,执行<code>next()</code>后会将控制权交给下一个中间件,如果没有有中间件没有执行<code>next</code>后将会沿路折返,将控制权交换给前一个中间件。官方文档将这种代码执行方式通过下面图片举例。</p>
+<p><img src="/2020/04/22/koa2%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%8E%9F%E7%90%86/onion.png" srcset="/img/loading.gif" lazyload alt="官方示例图"></p>
+<h3 id="koa2中间件的执行"><a href="#koa2中间件的执行" class="headerlink" title="koa2中间件的执行"></a>koa2中间件的执行</h3><p>koa2中间件的执行就像洋葱圈一样，从外面到最里面，再从最里面到最外面。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;koa&#x27;</span>);<br><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();<br><br><span class="hljs-comment">// logger</span><br><br>app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;第一层洋葱圈开始&#x27;</span>)<br>    <span class="hljs-keyword">await</span> next();<br>    <span class="hljs-keyword">const</span> rt = ctx.response.get(<span class="hljs-string">&#x27;X-Response-Time&#x27;</span>);<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;第一层洋葱圈结束&#x27;</span>)<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;ctx.method&#125;</span> <span class="hljs-subst">$&#123;ctx.url&#125;</span> - <span class="hljs-subst">$&#123;rt&#125;</span>`</span>);<br>&#125;);<br><br><span class="hljs-comment">// x-response-time</span><br><br>app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;第二层洋葱圈开始&#x27;</span>)<br>    <span class="hljs-keyword">const</span> start = <span class="hljs-built_in">Date</span>.now();<br>    <span class="hljs-keyword">await</span> next();<br>    <span class="hljs-keyword">const</span> ms = <span class="hljs-built_in">Date</span>.now() - start;<br>    ctx.set(<span class="hljs-string">&#x27;X-Response-Time&#x27;</span>, <span class="hljs-string">`<span class="hljs-subst">$&#123;ms&#125;</span>ms`</span>);<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;第二层洋葱圈结束&#x27;</span>)<br>&#125;);<br><br><span class="hljs-comment">// response</span><br><br>app.use(<span class="hljs-keyword">async</span> ctx =&gt; &#123;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;第三层洋葱圈开始&#x27;</span>)<br>    ctx.body = <span class="hljs-string">&#x27;Hello World&#x27;</span>;<br>    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;第三层洋葱圈结束&#x27;</span>)<br>&#125;);<br><br>app.listen(<span class="hljs-number">3000</span>);<br></code></pre></td></tr></table></figure>
 
 <p>执行上述代码的结果是：<br>第一层洋葱圈开始<br>第二层洋葱圈开始<br>第三层洋葱圈开始<br>第三层洋葱圈结束<br>第二层洋葱圈结束<br>第一层洋葱圈结束</p>
@@ -250,6 +252,9 @@
 
 <p>test.js文件中</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./like-koa2&#x27;</span>);<br><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa();<br><br><span class="hljs-comment">// logger</span><br>app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; &#123;<br>  <span class="hljs-keyword">await</span> next();<br>  <span class="hljs-keyword">const</span> rt = ctx[<span class="hljs-string">&#x27;X-Response-Time&#x27;</span>];<br>  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;ctx.req.method&#125;</span> <span class="hljs-subst">$&#123;ctx.req.url&#125;</span> - <span class="hljs-subst">$&#123;rt&#125;</span>`</span>);<br>&#125;);<br><br><span class="hljs-comment">// x-response-time</span><br>app.use(<span class="hljs-keyword">async</span> (ctx, next) =&gt; &#123;<br>  <span class="hljs-keyword">const</span> start = <span class="hljs-built_in">Date</span>.now();<br>  <span class="hljs-keyword">await</span> next();<br>  <span class="hljs-keyword">const</span> ms = <span class="hljs-built_in">Date</span>.now() - start;<br>  ctx[<span class="hljs-string">&#x27;X-Response-Time&#x27;</span>] = <span class="hljs-string">`<span class="hljs-subst">$&#123;ms&#125;</span>ms`</span>;<br>&#125;);<br><br><span class="hljs-comment">// response</span><br>app.use(<span class="hljs-keyword">async</span> ctx =&gt; &#123;<br>  ctx.res.end(<span class="hljs-string">&#x27;This is like koa2&#x27;</span>);<br>&#125;);<br><br>app.listen(<span class="hljs-number">8000</span>);<br></code></pre></td></tr></table></figure>
+
+
+
 
             </div>
             <hr>
