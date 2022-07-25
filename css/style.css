@@ -340,13 +340,13 @@ body .h2 {
   text-transform: none;
   letter-spacing: normal;
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 1.4rem;
 }
 body h3 {
   color: #383838;
-  text-decoration: underline;
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
+  margin-left: 0.3rem;
 }
 body h4,
 body h5,
@@ -420,7 +420,7 @@ body table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 12px;
+  font-size: 14px;
   overflow: auto;
   display: block;
 }
@@ -429,7 +429,7 @@ body th {
   border-bottom: 1px dashed #666;
   color: #383838;
   font-weight: bold;
-  font-size: 13px;
+  font-size: 15px;
 }
 body td {
   padding: 0 8px;
@@ -483,7 +483,7 @@ body {
   color: #383838;
   font-display: swap;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 16px;
   font-family: "Menlo", "Meslo LG", monospace;
   line-height: 1.725;
   text-rendering: geometricPrecision;
@@ -664,7 +664,7 @@ body {
 #header #nav ul li:last-child a {
   margin-right: 0;
 }
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 355px) {
   #header #title {
     display: table;
     margin-right: 5rem;
@@ -768,7 +768,7 @@ body {
 #header-post #nav {
   color: #39f;
   letter-spacing: 0.01em;
-  font-weight: 200;
+  font-weight: 400;
   font-style: normal;
   font-size: 0.8rem;
 }
@@ -837,7 +837,7 @@ body {
 }
 #header-post #toc .toc-level-2 {
   color: #383838;
-  font-size: 0.8rem;
+  font-size: 1.1rem;
 }
 #header-post #toc .toc-level-2:before {
   color: #39f;
@@ -845,7 +845,7 @@ body {
 }
 #header-post #toc .toc-level-3 {
   color: #666;
-  font-size: 0.7rem;
+  font-size: 1rem;
 }
 #header-post #toc .toc-level-4 {
   color: #525252;
@@ -1104,12 +1104,12 @@ article header .postdate {
 }
 article .content h2:before {
   position: absolute;
-  top: -4px;
+  top: -2px;
   left: -1rem;
   color: #39f;
   content: "#";
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.6rem;
 }
 article .content img,
 article .content video {
@@ -1255,12 +1255,12 @@ article .content .caption {
 #footer {
   position: absolute;
   bottom: 0;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   width: 100%;
   color: #666;
   vertical-align: top;
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
 }
 #footer ul {
   margin: 0;
@@ -1299,7 +1299,6 @@ article .content .caption {
 }
 @media (min-width: 39rem) {
   #footer {
-    display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     align-items: center;
@@ -1307,11 +1306,7 @@ article .content .caption {
     margin-bottom: 20px;
   }
   #footer .footer-left {
-    align-self: flex-start;
     margin-right: 20px;
-  }
-  #footer .footer-right {
-    align-self: flex-end;
   }
 }
 .pagination {
@@ -1389,6 +1384,7 @@ article .content .caption {
 #tag-cloud .tag-cloud-tags {
   clear: both;
   text-align: center;
+  margin-top: 20px;
 }
 #tag-cloud .tag-cloud-tags a {
   display: inline-block;
@@ -1406,7 +1402,7 @@ article .content .caption {
   color: #fff;
   font-display: swap;
   font-weight: 400;
-  font-size: 11.200000000000001px;
+  font-size: 12.8px;
   font-family: "Menlo", "Meslo LG", monospace;
   line-height: 1.725;
   text-rendering: geometricPrecision;
