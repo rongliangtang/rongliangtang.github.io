@@ -14,12 +14,13 @@
 <meta property="og:description" content="简言博客其实是一个挺酷的东西，想想能够拥有一个自己的网页，在上面能够发表自己的内容，不必在乎有无观众，可以当作自己的笔记本、日记本📒…对于计算机专业的同学来说，拥有一个博客是很有必要的，但是大部分人往往会感觉搭建麻烦，维护麻烦，所以拒绝使用博客。我从大一的时候看到很厉害的学长有自己的博客，便开始找资料教程来搭自己的博客，用的是wordpress和阿里云服务器。到大三看到很多人用GitHub和He">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/image-20220726112342314.png">
+<meta property="og:image" content="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/image-20220726114809828.png">
 <meta property="og:image" content="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/image-20220725181738467.png">
 <meta property="og:image" content="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/image-20220725182036888.png">
 <meta property="og:image" content="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/image-20220725182204497.png">
 <meta property="og:image" content="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/image-20220725183848264.png">
 <meta property="article:published_time" content="2022-07-24T15:51:21.000Z">
-<meta property="article:modified_time" content="2022-07-26T03:26:05.353Z">
+<meta property="article:modified_time" content="2022-07-26T03:48:35.714Z">
 <meta property="article:author" content="tangrl">
 <meta property="article:tag" content="教程">
 <meta name="twitter:card" content="summary">
@@ -168,7 +169,9 @@
 <h2 id="图床搭建教程"><a href="#图床搭建教程" class="headerlink" title="图床搭建教程"></a>图床搭建教程</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45750972/article/details/115742313?ops_request_misc=&request_id=&biz_id=102&utm_term=%E5%85%B3%E4%BA%8Ehexo%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E5%88%B0%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8(%E6%97%A0%E9%9C%80%E5%9B%BE%E5%BA%8A)%20&utm_medium=distribute.pc_search_result.none-task-blog-2~blog~sobaiduweb~default-0-115742313.142%5Ev33%5Eexperiment_2_v1,185%5Ev2%5Econtrol&spm=1018.2226.3001.4450">不用图床，直接把图片传到GitHub上教程~不推荐</a></p>
 <p>如果使用上面直接把图片存在github上，你会发现访问速度太慢了，带有图片的文章几乎没法看了，如下图所示，一周图片加载了三分多钟都没加载出来。</p>
 <p><img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/image-20220726112342314.png" alt="image-20220726112342314"></p>
-<p>所以我使用了图床的方法，利用腾讯云COS来存放图片，可以大大提高</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41526540/article/details/120518851">使用图床教程～强烈推荐</a></p>
+<p>所以我使用了上述图床的方法，利用腾讯云COS来存放图片，可以大大提高图片的访问速度，三分多钟加载不完的图片三秒钟就完事，如下图所示。配上typora和picgo，写起文章来也很舒服顺畅。</p>
+<p><img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/image-20220726114809828.png" alt="image-20220726114809828"></p>
 <h2 id="需要注意的问题"><a href="#需要注意的问题" class="headerlink" title="需要注意的问题"></a>需要注意的问题</h2><p>尽管网上资料繁多，在实际搭建的过程还是会碰到不少问题，所以我将自己遇到的问题分享出来，相信对你会有所帮助。</p>
 <h3 id="1-hexo-d提交项目后，个人域名无法访问"><a href="#1-hexo-d提交项目后，个人域名无法访问" class="headerlink" title="1.hexo d提交项目后，个人域名无法访问"></a>1.hexo d提交项目后，个人域名无法访问</h3><p>这时候可以看看自己github上的博客仓库中是否有CNAME文件，如果没有的话，域名是当然访问不了的。</p>
 <p>原因：这是因为你本地的博客文件中没有CNAME这个文件，如下图所示，所以git上去的时候，也会没有这个文件，导致个人域名无法访问。</p>
