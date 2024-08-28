@@ -1,0 +1,332 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="这是RongLiang的博客,用来分享技术知识和一些感悟。"><title>Notebook 商业化服务调研 | Tom's Blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="https://unpkg.com/normalize.css"><link rel="stylesheet" type="text/css" href="https://unpkg.com/purecss/build/pure-min.css"><link rel="stylesheet" type="text/css" href="https://unpkg.com/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="https://unpkg.com/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="https://unpkg.com/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="https://unpkg.com/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="https://unpkg.com/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Notebook 商业化服务调研</h1><a id="logo" href="/.">Tom's Blog</a><p class="description">野蛮生长</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa undefined"> 文章</i></a><a href="/archives/"><i class="fa undefined"> 总览</i></a><a href="/about/"><i class="fa undefined"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Notebook 商业化服务调研</h1><div class="post-meta">2024-08-20</div><div class="post-content"><p>本文对目前 Notebook 的商业化服务进行调研分析，包括它们的架构原理，最后总结与图数据库和 Spark 相关的 Notebook 特点与原理。</p>
+<span id="more"></span>
+
+<h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p><strong>Notebook 商业化服务</strong> 是指由企业或平台提供的基于 Jupyter Notebook 或类似<u>交互式计算环境的在线服务</u>，这些服务通常提供了更强大的计算资源、数据管理、协作工具和技术支持，适合个人用户、企业和研究机构使用。这些服务通常是付费的，或者在基础功能之上提供付费的高级功能和支持，这是“商业化”的方式。通过提供强大的计算资源、灵活的环境配置和全面的技术支持，帮助用户更高效地进行数据分析、机器学习、科学计算等任务。</p>
+<h2 id="2-对比分析"><a href="#2-对比分析" class="headerlink" title="2. 对比分析"></a>2. 对比分析</h2><p>下面对目前的主流商业化 Notebook 商业化服务进行分析，从基本功能、使用场景、后台使用的计算资源、与自家生态结合程度、用户界面、扩展性和商业化方式进行总结与梳理。</p>
+<p>以下是总结后的表格，方便对比分析：</p>
+<table>
+<thead>
+<tr>
+<th><strong>产品名称</strong></th>
+<th><strong>基本功能</strong></th>
+<th><strong>使用场景</strong></th>
+<th><strong>后台使用的计算资源</strong></th>
+<th><strong>与自家生态结合程度</strong></th>
+<th><strong>用户界面</strong></th>
+<th><strong>扩展性</strong></th>
+<th><strong>商业化方式</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Google Colab</strong></td>
+<td>免费在线 Jupyter Notebook，内置代码库、可视化插件、Markdown 支持</td>
+<td>数据科学、机器学习初学者及轻量级项目</td>
+<td>Google Cloud 资源，支持 GPU 和 TPU</td>
+<td>与 Google 产品如 Drive、Cloud 等深度集成</td>
+<td>简单易用，类似 Jupyter Notebook</td>
+<td>支持连接本地 Jupyter 和 Google Cloud</td>
+<td>免费使用，高级版本收费</td>
+</tr>
+<tr>
+<td><strong>AWS SageMaker</strong></td>
+<td>集成 Jupyter Lab、RStudio 的机器学习开发平台</td>
+<td>企业级机器学习模型训练、部署和管理</td>
+<td>AWS 云计算资源，支持大规模分布式训练</td>
+<td>与 AWS 服务如 S3、Lambda、CloudWatch 深度集成</td>
+<td>托管 Jupyter 笔记本界面，功能强大</td>
+<td>支持 MLOps 工作流自动化，集成 AWS 服务</td>
+<td>按计算资源和存储收费</td>
+</tr>
+<tr>
+<td><strong>Databricks Notebook</strong></td>
+<td>基于 Apache Spark 的多语言 Notebook 环境</td>
+<td>大数据处理、数据工程、机器学习</td>
+<td>云端 Spark 集群，支持大规模并行计算</td>
+<td>与 Apache Spark 原生集成，Azure 版本与 Azure 服务集成</td>
+<td>多语言支持，提供协作和版本控制功能</td>
+<td>高度可扩展，支持与云服务、BI 工具集成</td>
+<td>按计算资源收费，提供企业级支持</td>
+</tr>
+<tr>
+<td><strong>火山引擎</strong></td>
+<td>在线 Jupyter Notebook，支持 Python 和 Spark 内核</td>
+<td>数据分析、机器学习、大数据处理</td>
+<td>Spark 集群进行计算</td>
+<td>与火山引擎的其他服务集成</td>
+<td>基于 Jupyter Notebook 界面，简单易用</td>
+<td>支持 Python 和 Spark 内核</td>
+<td>按时长收费</td>
+</tr>
+<tr>
+<td><strong>Azure ML Notebooks</strong></td>
+<td>Azure 机器学习平台上的全托管 Jupyter Notebook</td>
+<td>企业级机器学习开发与部署</td>
+<td>Azure 云资源，支持大规模分布式训练</td>
+<td>与 Azure 生态系统如 DevOps、数据存储等深度集成</td>
+<td>基于 Jupyter Notebook 界面，集成 Azure ML 特性</td>
+<td>支持 Azure 广泛服务集成，扩展性强</td>
+<td>按计算资源和服务收费</td>
+</tr>
+<tr>
+<td><strong>Kaggle Notebook</strong></td>
+<td>完全托管的 Jupyter Notebook 环境，预装常用库</td>
+<td>数据科学家、分析师、机器学习工程师，竞赛、探索、学习</td>
+<td>提供免费的 CPU、GPU 和 TPU 资源</td>
+<td>与 Kaggle 平台深度集成，支持访问 Kaggle 数据集</td>
+<td>基于 Jupyter Notebook，简单易用</td>
+<td>支持与 Kaggle 竞赛和数据集集成，扩展性有限</td>
+<td>免费提供，适合初学者和竞赛参与者</td>
+</tr>
+<tr>
+<td><strong>IBM Watson Studio</strong></td>
+<td>基于云的 Jupyter Notebook 环境，支持多种编程语言和 AI 开发</td>
+<td>企业级数据科学、机器学习和人工智能开发与部署</td>
+<td>云端计算资源，支持大规模数据处理和模型训练</td>
+<td>与 IBM 的数据和 AI 服务深度集成</td>
+<td>基于 Jupyter Notebook 界面，功能丰富，易于使用</td>
+<td>支持 IBM 云服务集成，扩展性强</td>
+<td>按计算资源和服务收费</td>
+</tr>
+<tr>
+<td><strong>Paperspace Gradient</strong></td>
+<td>云端 Jupyter Notebook，专为机器学习和深度学习设计</td>
+<td>深度学习和机器学习模型开发，需强大计算资源</td>
+<td>GPU 和 TPU 资源，支持大规模计算任务</td>
+<td>与 Paperspace 的 Gradient 平台集成，支持全流程自动化</td>
+<td>基于 Jupyter Notebook，功能丰富，易于使用</td>
+<td>支持与 Gradient 平台集成，扩展性较强</td>
+<td>按计算资源收费，适合企业用户</td>
+</tr>
+<tr>
+<td><strong>Google AI Notebooks</strong></td>
+<td>Google Cloud 的托管 Jupyter Lab 服务，专为数据科学和机器学习设计</td>
+<td>使用 Google Cloud 资源进行数据科学和机器学习</td>
+<td>Google Cloud 资源，支持 GPU 和 TPU 加速</td>
+<td>与 Google Cloud 服务如 BigQuery、Cloud Storage 集成</td>
+<td>基于 Jupyter Lab，界面现代化，功能全面</td>
+<td>支持与 Google Cloud 服务广泛集成，扩展性强</td>
+<td>按计算资源和服务收费</td>
+</tr>
+<tr>
+<td><strong>Domino Data Lab</strong></td>
+<td>企业级数据科学平台，支持 Jupyter Notebook、RStudio、Zeppelin</td>
+<td>企业级数据科学、数据工程和机器学习任务</td>
+<td>支持配置和管理计算资源，如 CPU、GPU，按需扩展</td>
+<td>支持与企业内部系统和工具集成，适合复杂企业级工作流</td>
+<td>多工具支持，界面专业，适合企业用户</td>
+<td>高度可扩展，支持多种编程语言和工具，适合复杂企业应用</td>
+<td>按计算资源和服务收费，提供企业级功能和支持</td>
+</tr>
+<tr>
+<td><strong>CoCalc</strong></td>
+<td>在线协作平台，支持 Jupyter、Julia、LaTeX 等多种工具，适合教育和研究</td>
+<td>科学计算、数据科学、教育和研究，支持团队协作</td>
+<td>用户选择计算资源，按时长收费，适合不同规模的计算需求</td>
+<td>独立平台，支持多种工具协同使用</td>
+<td>多工具支持，界面灵活，适合教育和研究使用</td>
+<td>支持多种编程语言和工具，扩展性强</td>
+<td>按计算资源和使用时长收费，提供灵活收费模式</td>
+</tr>
+<tr>
+<td><strong>Amazon Neptune</strong></td>
+<td>专为图数据库设计的交互式开发环境，基于 Jupyter Notebook</td>
+<td>需要处理图数据库和知识图谱的应用，特别是大规模图数据的查询和分析</td>
+<td>Amazon Neptune 图数据库资源，支持复杂图数据操作</td>
+<td>与 AWS 其他服务如 S3、Lambda 集成，适合云端图数据库应用</td>
+<td>基于 Jupyter Notebook 界面，友好，适合数据分析和开发</td>
+<td>支持与 AWS 其他服务集成，扩展性较强</td>
+<td>按计算资源和服务收费，适合企业级图数据库应用</td>
+</tr>
+<tr>
+<td><strong>TigerGraph Notebooks</strong></td>
+<td>专为图数据库开发和分析设计的交互式环境，集成 TigerGraph 图数据库引擎</td>
+<td>适合大规模图数据处理和分析，特别是知识图谱和社交网络分析等应用</td>
+<td>TigerGraph 图数据库资源，支持复杂图计算</td>
+<td>与 TigerGraph 数据库深度集成，支持复杂的图查询和分析</td>
+<td>基于 Jupyter Notebook 界面，专业，适合图数据科学工作流</td>
+<td>支持与 Python 数据科学工具集成，扩展性强</td>
+<td>按计算资源和服务收费，提供企业级支持</td>
+</tr>
+</tbody></table>
+<h4 id="2-1-Google-Colab"><a href="#2-1-Google-Colab" class="headerlink" title="2.1 Google Colab"></a>2.1 Google Colab</h4><ul>
+<li><strong>基本功能</strong>：提供免费的在线 Jupyter Notebook 环境，支持 Python 和其他常用数据科学库，内置代码片段库、可视化插件、Markdown 支持以及版本控制功能。</li>
+<li><strong>使用场景</strong>：主要用于数据科学和机器学习，适合初学者和轻量级项目。</li>
+<li><strong>后台使用的计算资源</strong>：可以连接到 Google Cloud 的计算资源，支持 GPU 和 TPU 加速。</li>
+<li><strong>与自家生态结合程度</strong>：与 Google 的各类产品，如 Google Drive、Google Cloud 等紧密集成。</li>
+<li><strong>用户界面</strong>：简单易用，类似 Jupyter Notebook，界面清爽。</li>
+<li><strong>扩展性</strong>：支持连接到本地 Jupyter Notebook 和 Google Cloud，扩展性较强。</li>
+<li><strong>商业化方式</strong>：提供免费的基本服务，高级版本提供更多计算资源和更长的运行时间。</li>
+<li><a target="_blank" rel="noopener" href="https://colab.research.google.com/">https://colab.research.google.com/</a></li>
+</ul>
+<h4 id="2-2-AWS-SageMaker"><a href="#2-2-AWS-SageMaker" class="headerlink" title="2.2 AWS SageMaker"></a>2.2 AWS SageMaker</h4><ul>
+<li><strong>基本功能</strong>：专注于机器学习的开发平台，集成 Jupyter Lab、RStudio、Canvas 等应用，支持端到端的机器学习生命周期管理。</li>
+<li><strong>使用场景</strong>：适合需要进行大规模机器学习模型训练、部署和管理的企业级用户。</li>
+<li><strong>后台使用的计算资源</strong>：依托 AWS 的云计算资源，支持大规模分布式训练，特别是定制化的 PyTorch 环境。</li>
+<li><strong>与自家生态结合程度</strong>：与 AWS 的服务深度集成，如 S3、Lambda、CloudWatch 等。</li>
+<li><strong>用户界面</strong>：提供托管的 Jupyter Notebook 界面，界面简洁，功能强大。</li>
+<li><strong>扩展性</strong>：支持 MLOps 工作流的自动化和扩展，能够轻松集成 AWS 的其他服务。</li>
+<li><strong>商业化方式</strong>：按需收费，基于使用的计算资源和存储收费。</li>
+<li><a target="_blank" rel="noopener" href="https://aws.amazon.com/cn/sagemaker/">https://aws.amazon.com/cn/sagemaker/</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/sagemaker/">https://docs.aws.amazon.com/sagemaker/</a></li>
+<li><a target="_blank" rel="noopener" href="https://aws.amazon.com/cn/sagemaker/getting-started/?refid=ap_card">https://aws.amazon.com/cn/sagemaker/getting-started/?refid=ap_card</a></li>
+</ul>
+<h4 id="2-3-Databricks-Notebook"><a href="#2-3-Databricks-Notebook" class="headerlink" title="2.3 Databricks Notebook"></a>2.3 Databricks Notebook</h4><ul>
+<li><strong>基本功能</strong>：基于 Apache Spark 的数据分析平台，支持多语言编程、数据处理和机器学习开发。</li>
+<li><strong>使用场景</strong>：适合大数据处理、数据工程和机器学习任务，特别是在 Spark 环境中。</li>
+<li><strong>后台使用的计算资源</strong>：使用云端的 Spark 集群进行计算，支持大规模并行计算。</li>
+<li><strong>与自家生态结合程度</strong>：原生与 Apache Spark 集成，Databricks 与 Azure 的版本（Azure Databricks）与 Azure 服务集成更紧密。</li>
+<li><strong>用户界面</strong>：类似 Jupyter Notebook，支持多语言，提供协作和版本控制功能。</li>
+<li><strong>扩展性</strong>：高度可扩展，支持与多种云服务和 BI 工具集成。</li>
+<li><strong>商业化方式</strong>：按使用的计算资源收费，提供企业级功能和支持。</li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/azure/databricks/notebooks/">https://learn.microsoft.com/zh-cn/azure/databricks/notebooks/</a></li>
+<li><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/168130.html">https://help.aliyun.com/document_detail/168130.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.databricks.com/en/index.html">https://docs.databricks.com/en/index.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/azure/databricks/scenarios/databricks-extract-load-sql-data-warehouse">https://learn.microsoft.com/zh-cn/azure/databricks/scenarios/databricks-extract-load-sql-data-warehouse</a></li>
+</ul>
+<h4 id="2-4-火山引擎"><a href="#2-4-火山引擎" class="headerlink" title="2.4 火山引擎"></a>2.4 火山引擎</h4><ul>
+<li><strong>基本功能</strong>：提供在线 Jupyter Notebook 环境，主要支持 Python 和 Python Spark 内核。</li>
+<li><strong>使用场景</strong>：适合需要使用 Spark 进行大数据处理的用户，主要用于数据分析和机器学习任务。</li>
+<li><strong>后台使用的计算资源</strong>：使用 Spark 集群进行计算。</li>
+<li><strong>与自家生态结合程度</strong>：与火山引擎的其他服务集成，提供高效的数据处理能力。</li>
+<li><strong>用户界面</strong>：基于 Jupyter Notebook 的界面，简单易用。</li>
+<li><strong>扩展性</strong>：支持 Python 和 Spark，扩展性中等。</li>
+<li><strong>商业化方式</strong>：基于使用的计算资源按时长收费。</li>
+<li><a target="_blank" rel="noopener" href="https://www.volcengine.com/docs/6260/106517">https://www.volcengine.com/docs/6260/106517</a></li>
+</ul>
+<h4 id="2-5-Azure-Machine-Learning-Notebooks"><a href="#2-5-Azure-Machine-Learning-Notebooks" class="headerlink" title="2.5 Azure Machine Learning Notebooks"></a>2.5 Azure Machine Learning Notebooks</h4><ul>
+<li><strong>基本功能</strong>：为构建、训练和部署机器学习模型提供全托管的 Jupyter Notebook 环境。</li>
+<li><strong>使用场景</strong>：适合企业级用户进行端到端的机器学习开发和部署。</li>
+<li><strong>后台使用的计算资源</strong>：使用 Azure 云资源进行计算，支持大规模分布式训练。</li>
+<li><strong>与自家生态结合程度</strong>：深度集成 Azure 服务，如 Azure 数据存储、Azure DevOps 等。</li>
+<li><strong>用户界面</strong>：基于 Jupyter Notebook，集成了 Azure Machine Learning 的特性，界面统一。</li>
+<li><strong>扩展性</strong>：支持与 Azure 的各类服务和工具集成，扩展性极强。</li>
+<li><strong>商业化方式</strong>：按使用的计算资源和服务收费。</li>
+<li><a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/azure/machine-learning/how-to-run-jupyter-notebooks?view=azureml-api-2">https://learn.microsoft.com/zh-cn/azure/machine-learning/how-to-run-jupyter-notebooks?view=azureml-api-2</a></li>
+</ul>
+<h4 id="2-6-Kaggle-Notebook"><a href="#2-6-Kaggle-Notebook" class="headerlink" title="2.6 Kaggle Notebook"></a>2.6 Kaggle Notebook</h4><ul>
+<li><strong>基本功能</strong>：提供完全托管的 Jupyter Notebook 环境，预装常用的数据科学和机器学习库，并直接访问 Kaggle 的公开数据集。</li>
+<li><strong>使用场景</strong>：适合数据科学家、分析师和机器学习工程师进行竞赛、探索和学习。</li>
+<li><strong>后台使用的计算资源</strong>：提供免费的 CPU、GPU 和 TPU 资源。</li>
+<li><strong>与自家生态结合程度</strong>：深度集成 Kaggle 平台，支持访问 Kaggle 数据集和竞赛。</li>
+<li><strong>用户界面</strong>：基于 Jupyter Notebook，界面简单，易于使用。</li>
+<li><strong>扩展性</strong>：支持与 Kaggle 的竞赛和数据集集成，扩展性较为有限。</li>
+<li><strong>商业化方式</strong>：免费提供，适合初学者和竞赛参与者。</li>
+<li><a target="_blank" rel="noopener" href="https://www.kaggle.com/docs/notebooks">https://www.kaggle.com/docs/notebooks</a></li>
+</ul>
+<h4 id="2-7-IBM-Watson-Studio-Notebook"><a href="#2-7-IBM-Watson-Studio-Notebook" class="headerlink" title="2.7 IBM Watson Studio Notebook"></a>2.7 IBM Watson Studio Notebook</h4><ul>
+<li><strong>基本功能</strong>：基于云的交互式开发环境，支持多种编程语言和机器学习开发，深度集成 IBM 数据和 AI 服务。</li>
+<li><strong>使用场景</strong>：适合企业级数据科学、机器学习和人工智能开发与部署。</li>
+<li><strong>后台使用的计算资源</strong>：提供强大的云端计算资源，支持大规模数据处理和模型训练。</li>
+<li><strong>与自家生态结合程度</strong>：与 IBM 的数据与 AI 服务深度集成。</li>
+<li><strong>用户界面</strong>：基于 Jupyter Notebook，界面简洁，功能强大。</li>
+<li><strong>扩展性</strong>：支持与 IBM 云服务的深度集成和扩展，适合复杂的企业级工作流。</li>
+<li><strong>商业化方式</strong>：按使用的计算资源和服务收费。</li>
+<li><a target="_blank" rel="noopener" href="https://www.ibm.com/docs/en/cloud-paks/cp-data/5.0.x?topic=models-notebooks-scripts">https://www.ibm.com/docs/en/cloud-paks/cp-data/5.0.x?topic=models-notebooks-scripts</a></li>
+</ul>
+<h4 id="2-8-Paperspace-Gradient-Notebook"><a href="#2-8-Paperspace-Gradient-Notebook" class="headerlink" title="2.8 Paperspace Gradient Notebook"></a>2.8 Paperspace Gradient Notebook</h4><ul>
+<li><strong>基本功能</strong>：云端 Jupyter Notebook 环境，专门用于机器学习和深度学习的开发，提供 GPU 和 TPU 计算资源。</li>
+<li><strong>使用场景</strong>：适合需要强大计算资源进行深度学习和机器学习模型开发的用户。</li>
+<li><strong>后台使用的计算资源</strong>：提供 GPU 和 TPU 加速，支持大规模计算任务。</li>
+<li><strong>与自家生态结合程度</strong>：与 Paperspace 的 Gradient 平台集成，支持从开发到部署的全流程自动化。</li>
+<li><strong>用户界面</strong>：基于 Jupyter Notebook，功能丰富，易于使用。</li>
+<li><strong>扩展性</strong>：支持与 Gradient 平台的集成，扩展性较强。</li>
+<li><strong>商业化方式</strong>：按使用的计算资源收费，适合企业级用户。</li>
+<li><a target="_blank" rel="noopener" href="https://www.paperspace.com/notebooks">https://www.paperspace.com/notebooks</a></li>
+</ul>
+<h4 id="2-9-Google-AI-Platform-Notebook"><a href="#2-9-Google-AI-Platform-Notebook" class="headerlink" title="2.9 Google AI Platform Notebook"></a>2.9 Google AI Platform Notebook</h4><ul>
+<li><strong>基本功能</strong>：Google Cloud 提供的托管 Jupyter Lab 服务，支持数据科学、机器学习和深度学习开发。</li>
+<li><strong>使用场景</strong>：适合需要使用 Google Cloud 资源进行机器学习和数据科学任务的用户。</li>
+<li><strong>后台使用的计算资源</strong>：使用 Google Cloud 的计算资源，支持 GPU 和 TPU 加速。</li>
+<li><strong>与自家生态结合程度</strong>：深度集成 Google Cloud 服务，如 BigQuery、Cloud Storage 等。</li>
+<li><strong>用户界面</strong>：基于 Jupyter Lab，界面现代化，功能全面。</li>
+<li><strong>扩展性</strong>：支持与 Google Cloud 的广泛服务集成，扩展性极强。</li>
+<li><strong>商业化方式</strong>：按使用的计算资源和服务收费。</li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/google-cloud/how-to-use-google-ai-platform-notebooks-for-your-data-science-team-26d9eefc8ce0">https://medium.com/google-cloud/how-to-use-google-ai-platform-notebooks-for-your-data-science-team-26d9eefc8ce0</a></li>
+</ul>
+<h4 id="2-10-Domino-Data-Lab-Notebook"><a href="#2-10-Domino-Data-Lab-Notebook" class="headerlink" title="2.10 Domino Data Lab Notebook"></a>2.10 Domino Data Lab Notebook</h4><ul>
+<li><strong>基本功能</strong>：企业级的数据科学平台，提供基于 Jupyter Notebook、RStudio 和 Zeppelin 的云端开发环境。</li>
+<li><strong>使用场景</strong>：适合企业级数据科学、数据工程和机器学习任务，支持大规模数据处理和自动化工作流。</li>
+<li><strong>后台使用的计算资源</strong>：支持配置和管理计算资源，如 CPU、GPU，按需扩展。</li>
+<li><strong>与自家生态结合程度</strong>：与企业的内部系统和工具集成，支持复杂的企业级工作流。</li>
+<li><strong>用户界面</strong>：多工具支持，界面专业，适合企业用户。</li>
+<li><strong>扩展性</strong>：高度可扩展，支持多种编程语言和工具，适合复杂的企业应用。</li>
+<li><strong>商业化方式</strong>：按使用的计算资源和服务收费，提供企业级功能和支持。</li>
+<li><a target="_blank" rel="noopener" href="https://domino.ai/solutions/jupyter">https://domino.ai/solutions/jupyter</a></li>
+</ul>
+<h4 id="2-11-CoCalc"><a href="#2-11-CoCalc" class="headerlink" title="2.11 CoCalc"></a>2.11 CoCalc</h4><ul>
+<li><strong>基本功能</strong>：在线协作平台，支持 Jupyter、Julia、LaTeX 等多种计算工具，专为科学计算、数据科学和教育设计。</li>
+<li><strong>使用场景</strong>：适合教育、研究和团队协作，支持复杂的科学计算和数据分析任务。</li>
+<li><strong>后台使用的计算资源</strong>：用户可以选择计算资源，按时长收费，适合不同规模的计算需求。</li>
+<li><strong>与自家生态结合程度</strong>：独立的平台，支持多种工具的协同使用。</li>
+<li><strong>用户界面</strong>：多工具支持，界面灵活，适合教育和研究使用。</li>
+<li><strong>扩展性</strong>：支持多种编程语言和工具，扩展性较强。</li>
+<li><strong>商业化方式</strong>：按计算资源和使用时长收费，提供灵活的收费模式。</li>
+<li><a target="_blank" rel="noopener" href="https://doc.cocalc.com/">https://doc.cocalc.com/</a></li>
+</ul>
+<h4 id="2-12-Amazon-Neptune-Notebook"><a href="#2-12-Amazon-Neptune-Notebook" class="headerlink" title="2.12 Amazon Neptune Notebook"></a>2.12 Amazon Neptune Notebook</h4><ul>
+<li><strong>基本功能</strong>：专为图数据库和知识图谱设计的交互式开发环境，基于 Jupyter Notebook，深度集成 Amazon Neptune 图数据库。</li>
+<li><strong>使用场景</strong>：适合需要处理图数据库和知识图谱的应用，特别是大规模图数据的查询和分析。</li>
+<li><strong>后台使用的计算资源</strong>：使用 Amazon Neptune 图数据库的资源，支持复杂的图数据操作。</li>
+<li><strong>与自家生态结合程度</strong>：与 AWS 的其他服务（如 S3、Lambda）集成，适合云端图数据库应用。</li>
+<li><strong>用户界面</strong>：基于 Jupyter Notebook，界面友好，适合数据分析和开发。</li>
+<li><strong>扩展性</strong>：支持与 AWS 的其他服务集成，扩展性较强。</li>
+<li><strong>商业化方式</strong>：按使用的计算资源和服务收费，特别适合企业级图数据库应用。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.aws.amazon.com/neptune/latest/userguide/graph-notebooks.html">https://docs.aws.amazon.com/neptune/latest/userguide/graph-notebooks.html</a></li>
+</ul>
+<h4 id="2-13-TigerGraph-Notebooks"><a href="#2-13-TigerGraph-Notebooks" class="headerlink" title="2.13 TigerGraph Notebooks"></a>2.13 TigerGraph Notebooks</h4><ul>
+<li><strong>基本功能</strong>：专为图数据库开发和分析设计的交互式环境，基于 Jupyter Notebook，集成 TigerGraph 的图数据库引擎。</li>
+<li><strong>使用场景</strong>：适合需要进行大规模图数据处理和分析的企业用户，特别是知识图谱和社交网络分析等应用。</li>
+<li><strong>后台使用的计算资源</strong>：使用 TigerGraph 的图数据库资源，支持复杂图计算。</li>
+<li><strong>与自家生态结合程度</strong>：深度集成 TigerGraph 数据库，支持复杂的图查询和分析。</li>
+<li><strong>用户界面</strong>：基于 Jupyter Notebook，界面专业，适合图数据科学工作流。</li>
+<li><strong>扩展性</strong>：支持与 Python 数据科学工具的集成，扩展性强。</li>
+<li><strong>商业化方式</strong>：按使用的计算资源和服务收费，提供企业级支持。</li>
+<li><a target="_blank" rel="noopener" href="https://docs.tigergraph.com/ml-workbench/current/on-cloud/notebooks">https://docs.tigergraph.com/ml-workbench/current/on-cloud/notebooks</a></li>
+</ul>
+<h2 id="3-架构原理"><a href="#3-架构原理" class="headerlink" title="3. 架构原理"></a>3. 架构原理</h2><p>下面对目前能够找到相关资料的 Notebook 商业化服务的架构原理进行总结梳理。</p>
+<h4 id="3-1-AWS-SageMaker"><a href="#3-1-AWS-SageMaker" class="headerlink" title="3.1 AWS SageMaker"></a>3.1 AWS SageMaker</h4><p>下图描述了 AWS SageMaker Studio Classic notebook 的架构原理：</p>
+<img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/3-3172-large.jpg" alt="AWS SageMaker Studio Classic notebook architecture" style="zoom:70%;" />
+
+<p>在架构方面，用户通过 Studio 可以访问 Jupyter 的前端。每个用户都有一个独立的 EC2 实例，将Jupyter Server 部署在这个 EC2 实例的容器里面。Kernel 可以部署在不同算力的 EC2 实例内的容器里面，并通过 Kernel Gateway 与 Jupyter Server 进行通信。并且 Kernel 所在的容器可以基于用户自定义的镜像进行构建。</p>
+<p>在存储方面，Jupyter Server 和 Kernel Gateway 都会连接到共享的 Amazon EFS。EFS 提供持久存储，因此即使单个 EC2 实例被停止或重启，用户数据也会被保留。</p>
+<p>这种架构的优点是更具有扩展性和能够进行更灵活的资源分配，缺点是占用的计算资源会比较多、比较难管理。</p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://aws.amazon.com/cn/blogs/machine-learning/dive-deep-into-amazon-sagemaker-studio-notebook-architecture/">Dive deep into Amazon SageMaker Studio Classis Notebooks architecture</a></p>
+<h4 id="3-2-Databricks-Notebook"><a href="#3-2-Databricks-Notebook" class="headerlink" title="3.2 Databricks Notebook"></a>3.2 Databricks Notebook</h4><p>下图描述了 Databricks 的架构：</p>
+<p><img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/architecture.png" alt="Databricks architecture"></p>
+<p>Databricks 的 Notebook 属于 控制平面（Control Plane）的一部分。通过它，用户可以编写代码、执行数据处理任务、以及与后端的计算资源交互。后端的计算资源可以位于云端，例如 AWS Spark 集群等。后端的计算资源可以读写存储在本地或云端的数据资源。</p>
+<p>Databricks Notebook 更详细的架构原理资料暂时还没有找到。</p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://docs.databricks.com/en/getting-started/overview.html">Databricks architecture overview</a></p>
+<h4 id="3-3-火山引擎"><a href="#3-3-火山引擎" class="headerlink" title="3.3 火山引擎"></a>3.3 火山引擎</h4><p>下面的图片是火山引擎 DataLeap notebook 的基础结构原理图：</p>
+<p><img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/640" alt="DataLeap notebook architecture"></p>
+<p>在架构方面，DataLeap 中 notebook 的前端使用的是经过二次开发的 Jupyter Lab。为节省资源，为每个项目启动一个 Jupyter Server，而不是为每个用户启动一个 Jupyter Server。Jupyter Server 通过 Enterprise Gateway 来连接部署在集群中的 Kernel。</p>
+<p>在存储方面，把 Notebook 代码文件存放在 OSS 上，这样可以实现代码的共享。把管理用户到 Kernel 的 Session 信息存储在 Mysql 中，提高连接的可靠性。</p>
+<p>这种架构适合 to c 的场景，具备更高的性能，但是维护难度更大。</p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/wLp-ZJaXvZO85FiFXdJafw">一文了解 DataLeap 中的 Notebook</a></p>
+<h4 id="3-4-Amazon-Neptune-Notebook"><a href="#3-4-Amazon-Neptune-Notebook" class="headerlink" title="3.4 Amazon Neptune Notebook"></a>3.4 Amazon Neptune Notebook</h4><p>下面图片是 Amazon Neptune Notebook 的架构原理图：</p>
+<img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/image-20240826142832228.png" alt="Neptune Notebook architecture" style="zoom:70%;" />
+
+<p>用户在 Jupyter Notebook 实例中运行代码时，Notebook 会通过 SageMaker ENI 与 Neptune 集群通信，执行图查询并获取结果。Notebook 的内容可以存储在 S3 中，这样用户可以方便地加载和保存他们的工作内容，并在不同的 Notebook 实例之间共享这些内容。Amazon Neptune 图数据库通过 VPC S3 端点从 Amazon S3 加载图数据源文件到图数据库中。用户可以将这些数据用于图分析和模型训练，并通过 Jupyter Notebook 进行访问。</p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://d1.awsstatic.com/events/reinvent/2019/Deep_dive_on_Amazon_Neptune_DAT361.pdf">Explore use cases using Neptune</a></p>
+<h4 id="3-5-美团内部数据系统-Notebook"><a href="#3-5-美团内部数据系统-Notebook" class="headerlink" title="3.5 美团内部数据系统 Notebook"></a>3.5 美团内部数据系统 Notebook</h4><p>下图是美团内部数据系统 notebook 的架构原理图：</p>
+<img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/0bea9989a83ad72b12791e023234c79d303225.png" alt="美团内部数据系统 Notebook architecture" style="zoom:30%;" />
+
+<p>在架构方面，通过 Jupyter Hub 来部署 Jupyter Server 和 Kernel 实例。基于 Jupyter Hub 接入数据系统的验证方式。Jupyter Server 和 Kernel 实例 部署在 K8s 的容器里面，会为每个用户创建一个实例容器。用户可以通过 pyspark 来操作 spark 集群。用户编写的 ipynb 代码文件，基于 nbconvert 可以在调度系统里面执行。</p>
+<p>在部署方面，代码文件会上传到对象存储，实现文件的共享。</p>
+<p>这种架构适合 to b 场景，维护起来比较简单。</p>
+<p>参考资料：</p>
+<p><a target="_blank" rel="noopener" href="https://tech.meituan.com/2019/11/21/application-practice-jupyter.html">Jupyter 在美团民宿的应用实践</a></p>
+<h2 id="4-图数据库相关"><a href="#4-图数据库相关" class="headerlink" title="4. 图数据库相关"></a>4. 图数据库相关</h2><p>上面介绍的 Notebook 商业化产品中，<strong>Amazon Neptune Notebook</strong> 和 <strong>TigerGraph Notebooks</strong> 都通过 Jupyter Notebook 提供了交互式的开发环境，用户可以在这个环境中编写代码、运行查询、并可视化结果。这些 Notebooks 直接集成了各自的图数据库（Amazon Neptune 和 TigerGraph），使用户能够在 Notebook 中直接与图数据库进行交互。</p>
+<p>在集成深度方面：这两款 Notebook 都深度集成了各自的图数据库引擎。Amazon Neptune Notebook 与 AWS 生态系统有紧密的结合，能够直接调用如 S3 存储、Lambda 函数等服务。而 TigerGraph Notebooks 则侧重于集成 TigerGraph 的图数据库功能，支持复杂的图查询和分析。</p>
+<p>在计算资源方面：Amazon Neptune Notebook 依赖于 Amazon Neptune 图数据库的计算资源，特别是在处理大规模图数据时，能够利用 Neptune 提供的高效查询和存储功能。TigerGraph Notebooks 则利用 TigerGraph 图数据库的资源，支持复杂图计算和图分析。</p>
+<p>在 Jupyter Notebook 中访问图数据库主要有两种方法。首先，可以使用 Python 第三方库（如 <a target="_blank" rel="noopener" href="https://community.neo4j.com/t/neo4j-with-jupyter-notebook-python/53099">neo4j-python-driver</a>）直接连接图数据库，并通过安装可视化插件将数据可视化，这种方式灵活且适合已有 Python 技术栈的用户。其次，Apache Zeppelin 提供了 <a target="_blank" rel="noopener" href="https://zeppelin.apache.org/docs/0.8.2/interpreter/neo4j.html">Neo4j Interpreter</a>，用户可以通过 magic 命令直接操作图数据库，这种方法集成度高，适合需要快速上手和以图数据库查询为主的工作流。</p>
+<p>总而言之，Notebook 连接图数据库资源，其实就是访问图数据库对外暴露的访问接口。</p>
+<h2 id="5-Spark-相关"><a href="#5-Spark-相关" class="headerlink" title="5. Spark 相关"></a>5. Spark 相关</h2><p>在 Notebook 中访问和操作 Apache Spark 通常通过像 Databricks Notebook 这样的平台进行。这些平台提供了强大的数据分析和处理能力，特别适合大规模数据处理、数据工程和机器学习任务。Databricks Notebook 基于 Apache Spark 构建，支持多语言编程，并利用云端的 Spark 集群进行并行计算，借助 Spark 的分布式计算框架高效处理和分析海量数据。</p>
+<p>Databricks Notebook 与 Spark 的深度集成使得用户能够直接在 Notebook 环境中运行 Spark 作业，无需额外配置。用户可以通过 Notebook 编写多种编程语言的代码（如 Python、SQL、Scala 等），直接操作 Spark 数据集并实时查看计算结果。此外，Databricks 支持与 Azure 等云服务的紧密集成，特别是在 Azure Databricks 中，用户可以无缝访问 Azure 的数据存储、计算和机器学习服务，实现端到端的数据处理和分析。平台的高度扩展性还允许与多种 BI 工具和云服务集成，满足企业多样化的需求。商业化方面，Databricks 按计算资源收费，提供企业级功能和支持，非常适合需要处理大规模数据的企业使用。</p>
+<p>总而言之，Notebook 连接 Spark 资源，其实就是连接到 Spark 资源对外暴露的访问接口。在 Jupyter Notebook 中，可以通过 PySpark、Apache Livy、Databricks Connect 或 Hadoop YARN 等工具和配置，将 Notebook 连接到本地或远程的 Spark 集群资源，从而直接在 Notebook 中执行 Spark 作业，实现大规模数据处理和分析。也可以通过扩展相关的 magic 命令，来编写 Spark 的代码。</p>
+<h2 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a>6. 总结</h2><p>目前主流的 Notebook 商业化服务大多基于 Jupyter 进行二次开发，但各厂商的开发程度不同。例如，Google Colab 对 Jupyter 进行了较深的二次开发，创建了自己的前端，并将 Jupyter 的后端部署在其自有的计算资源上，实现商业化。而 AWS SageMaker 则对 Jupyter 进行的二次开发较少，主要是将其集成到平台上，并对接平台的资源。</p>
+<p>通过分析主流的 Notebook 商业化服务，可以看出，不同任务需要不同类型的 Notebook。在 Notebook 的后端，如果只需要纯 Python 环境，只需将 Jupyter 后端安装在相应的计算资源上即可。而如果需要连接 Spark、图数据库等资源，则需提前配置好这些资源，并在用户启动实例时自动连接。在使用方面，可以开发相应的 magic 命令，以便用户在每个单元格执行前指定语言，或统一配置实例使用的编程语言。</p>
+</div><div class="tags"><ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jupyter-%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91/" rel="tag">Jupyter 二次开发</a></li></ul></div><div class="post-nav"><a class="pre" href="/2024/08/23/Jupyter-%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/">Jupyter 二次开发方式总结</a><a class="next" href="/2024/08/19/%20%E5%8A%A8%E6%89%8B%E7%BB%83%E4%B9%A0-K8s/">动手练习 K8s</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Java-%E5%90%8E%E7%AB%AF/" style="font-size: 15px;">Java 后端</a> <a href="/tags/DevOps/" style="font-size: 15px;">DevOps</a> <a href="/tags/K8s/" style="font-size: 15px;">K8s</a> <a href="/tags/Jupyter-%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91/" style="font-size: 15px;">Jupyter 二次开发</a> <a href="/tags/%E6%95%99%E7%A8%8B/" style="font-size: 15px;">教程</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 15px;">工具</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 联系我</i></div><ul></ul><a href="mailto:trl2025@163.com" title="Mail" target="_blank">Mail</a><ul></ul><a href="https://github.com/rongliangtang" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://space.bilibili.com/28159312" title="Bilibili" target="_blank">Bilibili</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2024 Tom</div></div></div><script type="text/javascript" src="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js?v=1.0.0" successtext="复制成功！"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css?v=1.0.0"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>

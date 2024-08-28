@@ -1,0 +1,255 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="这是RongLiang的博客,用来分享技术知识和一些感悟。"><title>Jupyter 项目工作原理介绍 | Tom's Blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="https://unpkg.com/normalize.css"><link rel="stylesheet" type="text/css" href="https://unpkg.com/purecss/build/pure-min.css"><link rel="stylesheet" type="text/css" href="https://unpkg.com/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="https://unpkg.com/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="https://unpkg.com/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="https://unpkg.com/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="https://unpkg.com/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Jupyter 项目工作原理介绍</h1><a id="logo" href="/.">Tom's Blog</a><p class="description">野蛮生长</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa undefined"> 文章</i></a><a href="/archives/"><i class="fa undefined"> 总览</i></a><a href="/about/"><i class="fa undefined"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Jupyter 项目工作原理介绍</h1><div class="post-meta">2024-08-08</div><div class="post-content"><p>实习所在的公司做的产品需要与数据打交道，所以最近有实现类似 Jupyter 这种在线交互执行环境。让用户可以和他们自己上传的数据交互。经过调研最终决定在 Jupyer 和 Zeppelin 这两个开源的平台中的一个进行二次开发。所以需要去了解他们的原理，本文介绍 Jupyter 的原理。</p>
+<span id="more"></span>
+
+<h2 id="Jupyter-项目是什么"><a href="#Jupyter-项目是什么" class="headerlink" title="Jupyter 项目是什么"></a>Jupyter 项目是什么</h2><p><a target="_blank" rel="noopener" href="https://jupyter.org/">Jupyter</a> 是一个开源项目，旨在为交互式计算提供支持，特别是在数据科学、机器学习、科学计算和教育领域。如果没有使用过的话，可以去 Jupyter 官方提供的 <a target="_blank" rel="noopener" href="https://jupyter.org/try">在线体验地址</a> 熟悉熟悉。Jupyter 在社区支持、应用规模、用户习惯等方面都比 Zeppelin 会更好。下面我们来了解一下 Jupyter 项目的生态和一些重要组件的原理。</p>
+<h2 id="Jupyter-项目生态"><a href="#Jupyter-项目生态" class="headerlink" title="Jupyter 项目生态"></a>Jupyter 项目生态</h2><p>Jupyter 项目有多个组件组成，通过不同的组件可以构造出不同的应用。组件之间的依赖关系如下图所示：</p>
+<img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/repos_map.png" alt="Jupyter 项目架构图" style="zoom:50%;" />
+
+<p>上述架构中的各组件分别是：</p>
+<ul>
+<li><strong>EXTENSIONS</strong> : 这个组件是扩展，扩展 Jupyter 的功能，提供额外的工具和服务，增强用户体验。扩展通常作为<strong>插件</strong>安装，可以与 Jupyter Notebook 、JupyterLab 等前端集成，增强基础功能。用户可以通过命令行或配置文件启用这些扩展。</li>
+<li><strong>APPLICATIONS</strong> : 这个组件是用户接口，提供不同形式的 Jupyter <strong>用户界面</strong>和工具，满足各种需求。用户通过浏览器或桌面应用程序访问这些应用，使用它们进行编程、数据分析和可视化。不同的应用通过 Jupyter Server 提供的 API 进行交互。</li>
+<li><strong>WIDGETS</strong> : 这个组件是小部件，提供<strong>交互式组件</strong>，<strong>增强 Notebook 的互动性</strong>。小部件通常在 Notebook 中使用，通过内核执行代码，与用户交互并动态更新显示内容。</li>
+<li><strong>API</strong> : 这个组件是 API，<strong>提供核心功能的编程接口，支持扩展和定制</strong>。开发者可以使用这些 API 扩展 Jupyter 的功能，创建自定义的应用和服务。</li>
+<li><strong>SERVERS</strong> : 这个组件是服务器，提供后端服务，<strong>管理用户会话和内核，处理客户端请求</strong>。服务器管理用户会话和内核，通过 HTTP&#x2F;HTTPS 、WebSocket 协议与客户端（如 Notebook 或 JupyterLab）通信，处理执行代码和返回结果。</li>
+<li><strong>KERNELS</strong> : 这个组件是内核，<strong>执行用户代码</strong>，返回计算结果。内核通过 Jupyter 协议与客户端通信，接收代码执行请求并返回结果。内核可以支持多种编程语言。</li>
+<li><strong>XEUS FRAMEWORK</strong> : 这个组件提供一个<strong>实现 Jupyter 协议的框架，支持创建高性能内核</strong>。</li>
+</ul>
+<p>上述架构中各组件之间的关系是：</p>
+<ul>
+<li><strong>用户界面（JupyterNotebook、JupyterLab）</strong>：通过浏览器或应用程序访问，向服务器发送请求。</li>
+<li><strong>服务器（JupyterHub、jupyter_server）</strong>：处理用户请求，管理会话和内核，使用 API 与内核通信。</li>
+<li><strong>内核（ipykernel、IRKernel、xeus-python）</strong>：执行用户代码，返回结果给服务器。</li>
+<li><strong>小部件（ipywidgets、bqplot）</strong>：嵌入在 Notebook 中，与用户交互，通过内核执行代码，动态更新显示内容。</li>
+<li><strong>扩展（nbviewer、nbgrader）</strong>：增强用户界面和功能，通过 API 与核心组件交互。</li>
+</ul>
+<p>通过这些组件的协同工作，Jupyter 项目提供了一个功能强大且灵活的交互式计算平台，满足了不同用户的多种需求。</p>
+<p>Jupyter 平台其实就是一个 Web 服务，我们可以从这个维度来看 Jupyter 的架构。前面的描述看起来很复杂，但是简化一下就是下面这幅图。</p>
+<p>Jupyter 平台通过 JupyterHub 管理多个用户，每个用户都有独立的单用户服务器实例，包括 Jupyter Lab 界面、Jupyter Server 和 IPython 内核。用户通过 JupyterLab 交互界面编写和执行代码，Notebook Server 处理请求并与内核通信执行代码，最终将结果返回给用户，实现了多用户的交互式计算环境。</p>
+<img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/7189fdd91099e1a8ba7e792ce592da9529878.png" alt="Jupyter 架构简化图" style="zoom:50%;" />
+
+<p>下面介绍各个组件中比较常用的应用。</p>
+<h3 id="用户接口组件"><a href="#用户接口组件" class="headerlink" title="用户接口组件"></a>用户接口组件</h3><p>用户接口的任务很简单，提供界面给用户使用，用户在界面进行的操作会发送到服务端进行请求。下面是两个常用的界面 Jupyter Notebook 和 Jupyter Lab。</p>
+<h4 id="Jupyter-Notebook"><a href="#Jupyter-Notebook" class="headerlink" title="Jupyter Notebook"></a>Jupyter Notebook</h4><p><a target="_blank" rel="noopener" href="https://github.com/jupyter/notebook">Jupyter Notebook</a> 是最经典的界面它的特点主要有以下几点：</p>
+<ul>
+<li><p><strong>单一文档界面</strong>：用户界面主要是一个单一的 Notebook 文档，可以包含代码、文本、图表和其他富媒体内容。</p>
+</li>
+<li><p><strong>简洁直观</strong>：设计简洁，容易上手，适合于基本的数据分析、教学和研究。</p>
+</li>
+<li><p><strong>扩展支持</strong>：支持通过扩展来增加功能，但扩展性较有限。</p>
+</li>
+<li><p><strong>专注于 Notebooks</strong>：主要功能集中在编辑和执行 Jupyter Notebooks。</p>
+</li>
+</ul>
+<p>它使用的场景主要简单的单文档工作流，如教学、学习和基本数据分析。</p>
+<h4 id="Jupyter-Lab"><a href="#Jupyter-Lab" class="headerlink" title="Jupyter Lab"></a>Jupyter Lab</h4><p><a target="_blank" rel="noopener" href="https://github.com/jupyterlab/jupyterlab">Jupyter Lab</a> 的特点主要有以下几点：</p>
+<ul>
+<li><strong>多文档界面</strong>：支持多标签和多窗口，可以在同一个界面中同时打开和操作多个 Notebooks、终端、文本文件、图表等。</li>
+<li><strong>高度可定制</strong>：提供更多的定制选项和插件系统，用户可以通过拖放组件来定制工作环境。</li>
+<li><strong>集成开发环境</strong>：集成了终端、文件浏览器、代码控制等工具，类似于一个全功能的 IDE（集成开发环境）。</li>
+<li><strong>增强的扩展性</strong>：有更强的扩展能力，支持更多的第三方插件，能够实现更多复杂的工作流。</li>
+</ul>
+<p>它使用的场景主要是更复杂的工作流和专业的数据科学和开发任务。</p>
+<h3 id="服务端组件"><a href="#服务端组件" class="headerlink" title="服务端组件"></a>服务端组件</h3><p>服务端的任务是接受前端发来的请求，与内核进行交互，将执行结果返回给前端。下面介绍 Jupyter Server 的原理。</p>
+<h4 id="Jupyter-Server"><a href="#Jupyter-Server" class="headerlink" title="Jupyter Server"></a>Jupyter Server</h4><p><a target="_blank" rel="noopener" href="https://github.com/jupyter-server/jupyter_server">Jupyter Server</a> 提供了后端服务（例如：核心服务、REST API）给前端界面（Jupyter notebook、JupyterLab）使用。</p>
+<h5 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h5><p>在 Jupyter Server 的文档中介绍了它的 <a target="_blank" rel="noopener" href="https://jupyter-server.readthedocs.io/en/latest/developers/architecture.html#">架构</a>，如下图所示：</p>
+<img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/jupyter-server-architecture.drawio.png" alt="Jupyter Server 架构图" style="zoom: 70%;" />
+
+<p>Jupyter Server 包括以下组件：</p>
+<ul>
+<li><p><strong>ServerApp</strong> 是基于 Tornado （python web 应用框架）的主要应用程序，它将所有组件连接在一起。</p>
+</li>
+<li><p>**Config Manager **初始化 ServerApp 的配置。可以使用此配置为 Jupyter Server 管理器定义自定义类并更改 ServerApp 设置。按照<a target="_blank" rel="noopener" href="https://jupyter-server.readthedocs.io/en/latest/other/full-config.html#other-full-config">配置文件指南</a> 了解配置设置以及如何构建自定义配置。</p>
+</li>
+<li><p><strong>Custom Extensions</strong> 允许创建自定义服务器的 REST API 端点。需要遵循 <a target="_blank" rel="noopener" href="https://jupyter-server.readthedocs.io/en/latest/developers/extensions.html#extensions">扩展指南</a> 以了解有关使用额外请求处理程序扩展 ServerApp 的更多信息。</p>
+</li>
+<li><p><strong>Gateway Server</strong> 是一个 Web 服务器，配置后，它可以访问在其他主机上运行的 Jupyter 内核。创建网关服务器的方法有很多种。如果 ServerApp 需要与位于资源管理集群中的远程内核通信，则可以使用 <a target="_blank" rel="noopener" href="https://github.com/jupyter-server/enterprise_gateway">Enterprise Gateway</a>，否则，可以使用 <a target="_blank" rel="noopener" href="https://github.com/jupyter-server/kernel_gateway">Kernel Gateway</a>，其中内核在 Gateway Server 本地运行。</p>
+</li>
+<li><p><strong>Contents Manager 和 File Contents Manager</strong> 负责在文件系统上为 前端 Notebook 提供服务。<strong>Session Manager</strong> 使用 Contents Manager 接收内核路径。可以参考 <a target="_blank" rel="noopener" href="https://jupyter-server.readthedocs.io/en/latest/developers/contents.html#contents-api">Contents API 指南</a> 来了解 Contents Manager。</p>
+</li>
+<li><p><strong>Session Manager</strong> 处理用户的会话（即与内核的交互）。当用户启动新内核时，会话管理器将启动一个进程来为用户配置内核并生成新的会话 ID。每个打开的 Notebook 都有一个单独的会话，但不同的 Notebook 内核可以使用相同的会话，这样可以在不同的 Notebooks 之间共享数据。例如，用户可以在一个 Notebook 中定义变量或函数，然后在另一个 Notebook 中使用它们。Session Manager 使用 SQLite3 数据库来存储会话信息。数据库默认存储在内存中，但可以配置为保存到磁盘。</p>
+</li>
+<li><p><strong>Mapping Kernel Manager</strong> 负责管理在 ServerApp 中运行的内核的生命周期。它为用户会话启动一个新内核，并协助针对内核执行中断、重启和关闭操作。</p>
+</li>
+<li><p>Jupyter Server 使用<strong>Jupyter Client库与 Notebook 内核协同工作。</strong></p>
+<ul>
+<li><strong>Kernel Manager</strong> 管理 Notebook 的一个内核。要了解有关内核管理器的更多信息，可以参考  <a target="_blank" rel="noopener" href="https://jupyter-client.readthedocs.io/en/latest/api/jupyter_client.html#jupyter_client.manager.AsyncKernelManager">Jupyter 客户端 API 文档</a>。</li>
+<li><strong>Kernel Spec Manager</strong> 解析具有内核 JSON 规范的文件，并提供可用内核配置列表。要了解 Kernel Spec Manager，可以参考 <a target="_blank" rel="noopener" href="https://jupyter-client.readthedocs.io/en/stable/kernels.html#kernel-specs">Jupyter Client 指南</a>。</li>
+</ul>
+</li>
+</ul>
+<h5 id="创建会话工作流程"><a href="#创建会话工作流程" class="headerlink" title="创建会话工作流程"></a>创建会话工作流程</h5><img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/session-create.drawio.png" alt="Jupyter Server 创建会话工作流程" style="zoom:80%;" />
+
+<p>如上图所示，当用户启动新内核时，会发生以下步骤：</p>
+<ol>
+<li>Notebook <strong>客户端</strong>向 <strong>Jupyter Server</strong> 发送 <a href=""><em>POST &#x2F;api&#x2F;sessions</em></a> 请求。此请求包含所有必要的数据，例如 Notebook 名称、类型、路径和内核名称。</li>
+<li><strong>Session Manager</strong> 根据输入数据向 <strong>Content Manager</strong> 请求内核在文件系统中的路径。</li>
+<li><strong>Session Manager</strong> 将内核路径发送给 <strong>Mapping Kernel Manager</strong>。</li>
+<li><strong>Mapping Kernel Manager</strong> 使用 <strong>Mutil Kernel Manager</strong> 和 <strong>Kernel Manager</strong> 启动内核创建过程。</li>
+<li><strong>Kernel Manager</strong> 通过 provisioner layer 来启动一个新内核。</li>
+<li><strong>Kernel Provisioner</strong> 负责根据内核规范启动内核。如果内核规范未定义 provisioner，则使用 <a target="_blank" rel="noopener" href="https://jupyter-client.readthedocs.io/en/latest/api/jupyter_client.provisioning.html#jupyter_client.provisioning.local_provisioner.LocalProvisioner">Local Provisioner</a> 启动内核。开发者可以通过 <a target="_blank" rel="noopener" href="https://jupyter-client.readthedocs.io/en/latest/api/jupyter_client.provisioning.html#jupyter_client.provisioning.provisioner_base.KernelProvisionerBase">Kernel Provisioner Base</a> 和 <a target="_blank" rel="noopener" href="https://jupyter-client.readthedocs.io/en/latest/api/jupyter_client.provisioning.html#jupyter_client.provisioning.factory.KernelProvisionerFactory">Kernel Provisioner Factory</a> 创建自定义配置器。</li>
+<li><strong>Kernel Spec Manager</strong> 从 JSON 文件中获取内核规范。该规范位于 <code>kernel.json</code> 文件中。</li>
+<li>一旦 <strong>Kernel Provisioner</strong> 启动内核， <strong>Kernel Manager</strong> 就会为 <strong>Session Manager</strong> 生成新的内核 ID 。</li>
+<li><strong>Session Manager</strong> 将新的会话数据保存到 SQLite3 数据库（会话 ID, Notebook 路径, Notebook 名字, Notebook 类型, 内核ID）。</li>
+<li>Notebook 客户端接收 创建的 Session 数据。</li>
+</ol>
+<h5 id="删除会话工作流程"><a href="#删除会话工作流程" class="headerlink" title="删除会话工作流程"></a>删除会话工作流程</h5><img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/session-delete.drawio.png" alt="Jupyter Server 创建会话工作流程" style="zoom:80%;" />
+
+<p>如上图所示，当用户停止内核时，会发生以下步骤：</p>
+<ol>
+<li>Notebook <strong>客户端</strong>向 <strong>Jupyter Server</strong> 发送 <a href=""><em>DELETE &#x2F;api&#x2F;sessions&#x2F;{session_id}</em></a> 请求。此请求具有内核当前正在使用的会话 ID。</li>
+<li><strong>Session Manager</strong> 从 SQLite3 数据库获取会话数据，并将内核 ID 发送给 <strong>Mapping Kernel Manager</strong>。</li>
+<li><strong>Mapping Kernel Manager</strong> 使用 <strong>Mutil Kernel Manager</strong> 和 <strong>Kernel Manager</strong> 启动内核关闭过程。</li>
+<li><strong>Kernel Manager</strong> 从 <strong>Kernel Spec Manager</strong> 中确定中断模式。它支持<code>Signal</code>和<code>Message</code> 中断模式。默认情况下，<code>Signal</code>使用中断模式。<ul>
+<li>当中断模式为时<code>Signal</code>，<strong>Kernel Provisioner</strong> 会使用操作系统信号中断内核<code>SIGINT</code>（尽管其他 Provisioner 实现可能使用不同的方法）。</li>
+<li>当中断模式为时<code>Message</code>，Session 在控制通道上发送 <a target="_blank" rel="noopener" href="https://jupyter-client.readthedocs.io/en/latest/messaging.html#msging-interrupt">“interrupt_request”消息</a>。</li>
+</ul>
+</li>
+<li>中断内核后，Session 在控制通道上发送 <a target="_blank" rel="noopener" href="https://jupyter-client.readthedocs.io/en/latest/messaging.html#kernel-shutdown">“shutdown_request”消息</a>。</li>
+<li><strong>Kernel Manager</strong> 等待内核关闭。超时之后，如果 <strong>Kernel Manager</strong> 检测到内核进程仍在运行，则它会发送 <code>SIGTERM</code> 操作系统信号（或等效的配置程序）来终止内核。如果 <strong>Kernel Manager</strong> 发现内核进程没有终止，它将发送一个 <code>SIGKILL</code> 操作系统信号(或等效的提供程序)，以确保内核的终止。</li>
+<li><strong>Kernel Manager</strong> 清理内核资源。它删除内核的进程间通信端口，关闭控制套接字，并释放 Shell、IOPub、StdIn、Control 和 Heartbeat 端口。</li>
+<li>当关闭完成后，<strong>Session Manager</strong>会从 SQLite3 数据库中删除会话数据，并向 Notebook 客户端响应 204 状态代码。</li>
+</ol>
+<h3 id="内核组件"><a href="#内核组件" class="headerlink" title="内核组件"></a>内核组件</h3><p>Jupyter 的内核组件（Kernel）是执行用户代码并返回结果的核心组件。每个内核实例对应一种编程语言，并且负责处理来自 Jupyter Notebook 或 JupyterLab 的执行请求。这些请求经过 Jupyter Server 转发给 Kernel。下面介绍常用的 IPython Kernel。</p>
+<h4 id="IPython"><a href="#IPython" class="headerlink" title="IPython"></a>IPython</h4><h5 id="解耦双进程模型"><a href="#解耦双进程模型" class="headerlink" title="解耦双进程模型"></a>解耦双进程模型</h5><p><a target="_blank" rel="noopener" href="https://ipython.readthedocs.io/en/stable/index.html">IPython</a> 是基于“解耦双进程模型”实现的。</p>
+<p>REPL（Read-Evaluate-Print Loop）是传统的交互式编程环境，包括读取用户输入、评估表达式、打印结果和循环操作。IPython 将评估（evaluate）过程抽象并分离到一个独立的进程中，这个进程被称为内核（kernel）。客户端（client）负责向内核发送执行指令，并接收内核返回的结果。</p>
+<p>它的实现方式是基于客户端和内核实现的。内核是一个独立的进程，负责实际的代码执行。内核接收来自客户端的执行指令，执行代码，并将结果返回给客户端。客户端是用户与内核交互的接口，负责发送执行指令并显示结果。客户端和内核可以运行在同一台机器上，也可以分布在不同的机器上。</p>
+<p>这种方式的优点是：1. 多个客户端可以连接到同一个内核，这使得不同的用户或应用可以共享同一个执行环境。2. 客户端和内核可以在不同的机器上运行，这种分布式架构支持更复杂的计算和资源管理。</p>
+<p>一个应用实例是：当启动 Jupyter QtConsole 时，实际上启动了两个进程：一个内核进程和一个基于 Qt 的客户端。客户端向内核发送命令，并接收和显示内核返回的结果。使用 –existing 参数可以连接到已存在的内核，而不需要启动新的内核。例如：<code>jupyter qtconsole --existing</code>。使用 <code>%connect_info</code> 魔法命令可以获取连接文件信息，例如 <code>--existing kernel-19732.json</code>，其中包含内核的进程 ID。</p>
+<p>客户端和内核的需要遵守特定的消息协议。这个消息协议定义了内核和客户端之间的消息格式和传递方式，确保指令和结果能够正确传递。</p>
+<p>IPython 通过解耦的两进程模型将代码执行和用户交互分离，实现了更灵活和强大的交互式编程环境。这个模型允许多个客户端连接到同一个内核，并支持客户端和内核在不同机器上运行，从而实现了更强的扩展性和分布式计算能力。Jupyter 项目继承了这一模型，扩展了其应用范围，支持多种前端和内核交互方式。也就是说 <strong>Jupyter 使用的 IPython 内核指的是 IPython 项目中的一部分。IPython 项目本身还包含 Terminal IPython Shell 等部分。</strong></p>
+<h5 id="IPython-Kernel"><a href="#IPython-Kernel" class="headerlink" title="IPython Kernel"></a>IPython Kernel</h5><p>用户前端界面（Notebook、Qt console、Terminal IPython 和第三方界面）都使用 IPython Kernel。这是一个单独的进程，负责运行用户代码等。<strong>前端使用通过 <a target="_blank" rel="noopener" href="http://zeromq.org/">ZeroMQ</a> 套接字发送的 JSON 消息与 IPython Kernel 通信；它们使用的协议 <a target="_blank" rel="noopener" href="https://jupyter-client.readthedocs.io/en/latest/messaging.html#messaging">在 Jupyter 中的消息传递 </a>中进行了描述。</strong></p>
+<p><strong>IPython Kernel</strong> 的 Python execution 核心执行机制与 <strong>Terminal IPython</strong> 共享，如下图所示：</p>
+<img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/ipy_kernel_and_terminal.png" alt="IPython 内核的核心执行机制" style="zoom:70%;" />
+
+<p>一个内核进程可以同时连接到多个前端。在这种情况下，不同的前端将可以访问相同的变量。</p>
+<p>这种设计的目的是为了能够基于相同内核轻松开发不同的前端，但它也使得在相同的前端中支持新语言成为可能，通过在这些语言中开发内核，开发社区正在改进 IPython 以使其更加实用。</p>
+<p>目前，有两种方法可以为另一种语言开发内核。<strong>Wrapper Kernel</strong> 重用 IPython 中的通信机制，并仅实现核心执行部分。<strong>Native Kernel</strong> 实现目标语言的核心执行部分和通信通信部分。如下图所示：</p>
+<img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/other_kernels.png" alt="开发内核的方法" style="zoom:70%;" />
+
+<p>对于有很好的 Python 包装器的语言（如 <a target="_blank" rel="noopener" href="https://pypi.python.org/pypi/octave_kernel">octave_kernel</a> ）或者对于实现通信机制不切实际的语言（如 <a target="_blank" rel="noopener" href="https://pypi.python.org/pypi/bash_kernel">bash_kernel ）</a> ，Wrapper Kernel 更容易快速编写。Native Kernel 可能会由使用它们的社区更好地维护，如 <a target="_blank" rel="noopener" href="https://github.com/JuliaLang/IJulia.jl">IJulia </a> 或 <a target="_blank" rel="noopener" href="https://github.com/gibiansky/IHaskell">IHaskell</a>。</p>
+<p>如果想要自己实现一种语言的内核，可以参考 <a target="_blank" rel="noopener" href="https://ipython.readthedocs.io/en/stable/development/execution.html">IPython 官方编写 Wrapper Kernel 的简单示例</a>。</p>
+<h5 id="IPython-Kernel-的执行过程"><a href="#IPython-Kernel-的执行过程" class="headerlink" title="IPython Kernel 的执行过程"></a>IPython Kernel 的执行过程</h5><p>当 IPython Kernel 接收到带有用户代码的 <a target="_blank" rel="noopener" href="https://jupyter-client.readthedocs.io/en/latest/messaging.html#execute">execute_request</a> 时 ，它会按照以下阶段处理该消息：</p>
+<ol>
+<li>在执行代码前触发 <code>pre_execute</code> 事件。</li>
+<li>在运行代码单元前触发 <code>pre_run_cell</code>（如果 <code>silent</code> 参数为 <code>True</code>，则不会触发）。</li>
+<li>执行 <code>run_cell</code> 方法<strong>进行预处理、编译并运行用户代码</strong>。</li>
+<li>如果代码执行成功，内核会计算 <code>user_expressions</code> 中的表达式。这些表达式的计算是在主要代码执行后进行的，因此它们的错误不会影响主要代码的执行。</li>
+<li>触发<code>post_execute</code>事件。</li>
+<li>在运行代码单元后触发 <code>post_run_cell</code>（如果 <code>silent</code> 参数为 <code>True</code>，则不会触发）。例如，Notebook 前端会利用此事件来显示图形。</li>
+</ol>
+<p>IPython 内核在执行代码的过程中，会触发一系列事件。开发者可以定义这些事件的内容，以便在代码执行的不同阶段执行自定义逻辑。每个事件都可以注册回调函数（Callbacks），这些回调函数会在相应事件触发时被调用。不同事件的详细作用可以参考 <a target="_blank" rel="noopener" href="https://ipython.readthedocs.io/en/stable/config/callbacks.html">IPython 事件</a>。</p>
+<p> <code>run_cell</code> 方法会执行用户代码，具体过程如下所示：</p>
+<ol>
+<li>预处理<ul>
+<li>首先，代码 cell 被 IPython.core.inputtransformer2 转换为 <code>%magic</code> 和 <code>!system</code> 扩展命令。这些命令是 IPython 特有的，允许用户在代码中执行系统命令或特定的 IPython 命令。</li>
+</ul>
+</li>
+<li>编译<ul>
+<li>扩展后的代码使用 Python 的 <code>compile()</code> 函数进行编译。<code>compile()</code> 函数的 <code>mode</code> 参数决定了代码的编译方式。</li>
+<li>当 mode 为 single ：用于单一交互式语句。如果代码块中包含多个表达式，每个表达式返回一个值时会多次调用 <code>sys.displayhook()</code></li>
+<li>当 mode 为 exec ：用于执行任意数量的代码块，例如模块的编译。在这种模式下，<code>sys.displayhook()</code> 不会被自动调用。</li>
+<li>当 mode 为 eval ：用于执行单个表达式并返回一个值。在这种模式下，<code>sys.displayhook()</code> 也不会被自动调用。</li>
+</ul>
+</li>
+<li>执行<ul>
+<li>代码会被分割为多个块，每个块在适当的模式下执行。</li>
+<li>如果只有一个代码块，则在 <code>single</code> 模式下执行。</li>
+<li>如果有多个代码块，且最后一个代码块是一行或两行，前面的代码块会在 <code>exec</code> 模式下执行，最后一个代码块在 <code>single</code> 模式下执行。</li>
+<li>如果最后一个代码块是多行代码，则所有代码块在 <code>exec</code> 模式下作为一个单元执行。</li>
+</ul>
+</li>
+</ol>
+<h3 id="部署组件"><a href="#部署组件" class="headerlink" title="部署组件"></a>部署组件</h3><h4 id="Kernel-Gateway"><a href="#Kernel-Gateway" class="headerlink" title="Kernel Gateway"></a>Kernel Gateway</h4><h5 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h5><p><a target="_blank" rel="noopener" href="https://github.com/jupyter-server/kernel_gateway">Jupyter Kernel Gateway</a> 是一个为 Jupyter 内核提供无头访问（headless access）的 Web 服务器，允许应用程序通过 REST API 和 WebSocket 与 Jupyter 内核进行远程通信。</p>
+<p>什么是无头访问？Jupyter Kernel Gateway 允许应用程序在没有 Jupyter Notebook 用户界面的情况下访问和使用 Jupyter 内核。这意味着你可以在没有传统 Jupyter Notebook 前端的情况下，远程控制和使用内核。</p>
+<p>通信方式是什么？应用程序可以通过 REST API 与内核进行通信，例如启动和停止内核、发送代码执行请求等。通过 WebSocket，应用程序可以使用 Jupyter 内核协议发送代码片段并接收执行结果，而不依赖于 ZeroMQ（Jupyter 内核通常使用的消息传递协议）。</p>
+<p>Kernel Gateway 只提供对内核的访问和控制，不提供编辑 Jupyter Notebooks 的功能。因此，它主要用于代码执行和内核管理，而不是用于创建或编辑 Notebook 文档。</p>
+<p>支持的操作模式主要有下面两种：</p>
+<ol>
+<li>代码片段执行模式：在这种模式下，应用程序可以通过 WebSocket 使用 Jupyter 内核协议发送代码片段进行执行。内核的启动和停止可以通过 REST API 控制。这种操作方式与 Jupyter Notebook Server 的相应 API 部分兼容，因此可以无缝集成到已有的工作流程中。</li>
+<li>HTTP 请求模式：Kernel Gateway 可以根据带有注释的 Notebook 单元格来处理 HTTP 请求。注释定义了支持的 HTTP 动词（如 GET、POST）和资源。当收到 HTTP 请求时，Kernel Gateway 会执行配置好的 Notebook 中的某个单元格，以响应请求。这使得你可以将 Notebook 配置为处理 HTTP 请求的后端，形成一种轻量级的微服务架构。</li>
+</ol>
+<p>Kernel Gateway 使用与 Jupyter Notebook 相同的代码来启动内核，并在本地进程&#x2F;文件系统空间中管理这些内核。这意味着它与 Jupyter Notebook 的内核管理逻辑保持一致。Kernel Gateway 可以被容器化（例如使用 Docker），并通过 tmpnb、Cloud Foundry、Kubernetes 等技术进行扩展。这使得它能够在云环境中大规模部署，并在大数据环境中与计算集群（如 Spark）集成。</p>
+<p>以下是相关的使用场景：</p>
+<ol>
+<li>与云计算集群的交互：Kernel Gateway 可以连接本地 Jupyter Notebook 服务器到云中的计算集群，靠近大数据源进行交互（例如，作为与 Spark 交互的网关）。</li>
+<li>为非 Notebook 的 Web 客户端提供内核支持：开发新型的 Web 客户端，这些客户端无需 Notebook 界面即可创建和使用内核（例如，通过 <a target="_blank" rel="noopener" href="https://github.com/jupyter/jupyter-js-services">jupyter-js-services</a> 实现的 Web 仪表盘）。</li>
+<li>从 Notebook 创建微服务：使用 Kernel Gateway 的 <a target="_blank" rel="noopener" href="https://jupyter-kernel-gateway.readthedocs.io/en/latest/http-mode.html">HTTP 模式</a>，可以将 Notebook 中的代码转换为微服务，通过 HTTP 请求触发执行，形成一种轻量级的服务架构。</li>
+</ol>
+<p><strong>Jupyter Kernel Gateway 是一个灵活的工具，用于通过 Web 接口远程控制和使用 Jupyter 内核。它可以在没有 Notebook 界面的情况下执行代码，并且支持多种通信方式和操作模式。Kernel Gateway 非常适合需要在分布式云环境中大规模使用内核、创建基于 Notebook 的微服务或为非 Notebook 的 Web 客户端提供内核支持的场景。</strong></p>
+<h5 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h5><p>下面列举一些命令，具体可以参考 <a target="_blank" rel="noopener" href="https://jupyter-kernel-gateway.readthedocs.io/en/latest/getting-started.html#">官方教程</a>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从 pypi 安装</span></span><br><span class="line">pip install jupyter_kernel_gateway</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以默认配置运行</span></span><br><span class="line">jupyter kernelgateway</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以 http-mode 运行，在 ./my_example.ipynb 中定义了接口</span></span><br><span class="line">jupyter kernelgateway --KernelGatewayApp.api=kernel_gateway.notebook_http --KernelGatewayApp.seed_uri=./my_example.ipynb --port=10100</span><br><span class="line"></span><br><span class="line"><span class="comment"># 以 websocket-mode 运行</span></span><br><span class="line">jupyter kernelgateway --KernelGatewayApp.api=kernel_gateway.jupyter_websocket --port=10100</span><br><span class="line"></span><br><span class="line"><span class="comment"># 还可以在 docker-stack 的基础上安装kernelgateway，具体参考官方教程</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h5><p>Jupyter Kernel Gateway 使 Jupyter Kernel 有了如下新的用途：</p>
+<ul>
+<li>将本地 Jupyter Notebook 服务器连接到在云端运行大数据的计算集群（例如，Spark 的交互式网关）</li>
+<li>使新型非 Notebook  Web 客户端能够配置和使用内核（例如，使用 <a target="_blank" rel="noopener" href="https://github.com/jupyter/jupyter-js-services">jupyter-js-services</a> 的仪表板）</li>
+<li>独立于客户端扩展内核（例如，通过 <a target="_blank" rel="noopener" href="https://github.com/jupyter/tmpnb">tmpnb</a>、<a target="_blank" rel="noopener" href="http://mybinder.org/">Binder</a> 或其他集群管理器）</li>
+<li>通过 http-mode 从笔记本创建微服务</li>
+</ul>
+<img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/tmpnb_kernel_gateway.png" alt="Jupyter Kernel Gateway 使用案例" style="zoom: 70%;" />
+
+<p>上图展示了如何使用 <a target="_blank" rel="noopener" href="https://github.com/jupyter/tmpnb">tmpnb</a> 在 Docker 容器中部署内核网关实例池，以支持按需交互式计算。其中客户端（如 jupyter-js-services 或 Thebe）通过 HTTP 请求向 <code>tmpnb</code> 发送内核启动请求，<code>tmpnb</code> 调用 Docker 启动容器并运行 Jupyter Kernel Gateway。随后，<code>tmpnb-proxy</code> 将客户端的 WebSocket 请求路由到对应的容器中的内核实例，实现按需的交互式计算，返回结果给客户端。这种架构支持动态扩展和高效管理多个独立的内核实例。</p>
+<p>官方 <a target="_blank" rel="noopener" href="https://github.com/jupyter/kernel_gateway_demos">jupyter&#x2F;kernel_gateway_demos</a> 提供了更多的 demo 供开发者参考。</p>
+<h4 id="Enterprise-Gateway"><a href="#Enterprise-Gateway" class="headerlink" title="Enterprise Gateway"></a>Enterprise Gateway</h4><h5 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h5><p><a target="_blank" rel="noopener" href="https://github.com/jupyter-server/enterprise_gateway">Jupyter Enterprise Gateway</a> 使 Jupyter Notebook 能够在分布式集群中启动远程内核，包括由 YARN、IBM Spectrum Conductor、Kubernetes 或 Docker Swarm 管理的 Apache Spark。这意味着你可以在大型计算集群上运行 Jupyter 内核，从而在这些集群上执行代码，而不仅仅是在本地计算机上。</p>
+<p>它为以下内核提供开箱即用的支持：</p>
+<ul>
+<li>使用 IPython 内核的 Python</li>
+<li>使用 IRkernel 的 R</li>
+<li>使用 Apache Toree 内核的 Scala</li>
+</ul>
+<p>Jupyter Enterprise Gateway 不管理多个 Jupyter Notebook 部署，如果你需要管理多个 Jupyter Notebook 实例，例如为多个用户提供独立的 Notebook 服务器，那么应该使用 <a target="_blank" rel="noopener" href="https://github.com/jupyterhub/jupyterhub">JupyterHub</a>。</p>
+<p>Jupyter Enterprise Gateway 其实是一个 Web 服务器，可在企业内提供对 Jupyter 内核的无头访问。Jupyter Enterprise Gateway 受到 Jupyter Kernel Gateway 的启发，除了提供以下功能外，还提供与 Kernel Gateway 的 <a target="_blank" rel="noopener" href="https://jupyter-kernel-gateway.readthedocs.io/en/latest/websocket-mode.html">jupyter-websocket 模式</a> 相同的功能：</p>
+<ol>
+<li>远程内核支持：Jupyter Enterprise Gateway 允许在分布式集群的不同节点上启动和管理 Jupyter 内核。图片中的 Worker Nodes 就是这些分布式节点，内核可以根据需要在这些节点上动态启动。内核的启动方式可以是本地的，也可以是通过分布式资源管理器（如 YARN、Kubernetes）来分配的。</li>
+<li>多种启动方式：Enterprise Gateway 可以通过轮询算法将内核分配到不同的节点，确保负载均衡。Enterprise Gateway 也可以根据资源管理器的指示，在特定的节点上启动内核。</li>
+<li>安全通信：客户端通过 HTTPS 或 WSS 与 Enterprise Gateway 进行安全通信。然后，Enterprise Gateway 再通过 ZMQ 与远程内核通信，这确保了整个通信链路的安全性。</li>
+<li>多租户支持：Enterprise Gateway 支持多租户能力，允许多个用户在同一环境中使用各自的内核实例，而不会相互干扰。图片中多个客户端连接到同一个 Gateway，但执行的内核是独立的。</li>
+<li>持久的内核会话：Enterprise Gateway 支持持久的内核会话，意味着即使客户端暂时断开连接，内核仍然保持活跃状态，等客户端重新连接时可以继续使用之前的会话。</li>
+<li><a target="_blank" rel="noopener" href="https://jupyter-enterprise-gateway.readthedocs.io/en/latest/developers/kernel-specification.html">配置文件关联</a>：Enterprise Gateway 可以根据用户或特定任务的需求，将配置文件与内核实例关联。这些配置文件可以包括内存限制、CPU 配额等资源配置，确保每个用户或任务都能获得适当的资源。</li>
+</ol>
+<p><img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/deployment.png" alt="Jupyter Enterprise Gateway 如何运行"></p>
+<h5 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install from pypi</span></span><br><span class="line">pip install --upgrade jupyter_enterprise_gateway</span><br><span class="line"></span><br><span class="line"><span class="comment"># show all config options</span></span><br><span class="line">jupyter enterprisegateway --help-all</span><br><span class="line"></span><br><span class="line"><span class="comment"># run it with default options</span></span><br><span class="line">jupyter enterprisegateway</span><br></pre></td></tr></table></figure>
+
+<p>请参考 <a target="_blank" rel="noopener" href="https://jupyter-enterprise-gateway.readthedocs.io/en/latest/operators/index.html#configuring-enterprise-gateway">官方使用教程</a></p>
+<p>如果需其他资源管理器编写应用程序或部署内核，参考官方的 <a target="_blank" rel="noopener" href="https://jupyter-enterprise-gateway.readthedocs.io/en/latest/developers/index.html">开发人员指南</a>。</p>
+<h4 id="Kernel-Gateway-和-Enterprise-Gateway-的区别"><a href="#Kernel-Gateway-和-Enterprise-Gateway-的区别" class="headerlink" title="Kernel Gateway 和 Enterprise Gateway 的区别"></a>Kernel Gateway 和 Enterprise Gateway 的区别</h4><p>Kernel Gateway 和 Enterprise Gateway 最大的区别是：Kernel Gateway 路由 Kernel Gateway 部署所在路由器上的内核，Enterprise Gateway 路由 一个集群里面的内核。</p>
+<p>Kernel Gateway 适用于以下场景：</p>
+<ol>
+<li>有一个小型用户池，其中网关服务器的资源可以在这些用户之间共享（不支持远程内核）</li>
+<li>希望配置 <a target="_blank" rel="noopener" href="https://jupyter-kernel-gateway.readthedocs.io/en/latest/http-mode.html">http mode</a> 功能，其中特定 Notebook 提供 HTTP 端点</li>
+</ol>
+<p>Enterprise Gateway 适用于以下场景：</p>
+<ol>
+<li>有一个由有限资源（GPU、大内存等）组成的大型计算集群，并且用户需要从笔记本电脑中获取这些资源</li>
+<li>有大量用户需要访问共享计算群集</li>
+<li>需要一定程度的高可用性&#x2F;灾难恢复，以便可以启动另一个网关服务器来为现有（和远程）内核提供服务</li>
+</ol>
+<h4 id="Jupyter-Hub"><a href="#Jupyter-Hub" class="headerlink" title="Jupyter Hub"></a>Jupyter Hub</h4><h5 id="简介-2"><a href="#简介-2" class="headerlink" title="简介"></a>简介</h5><p><a target="_blank" rel="noopener" href="https://github.com/jupyterhub/jupyterhub">JupyterHub</a> 是为多用户提供 <a target="_blank" rel="noopener" href="https://jupyter-notebook.readthedocs.io/en/latest/">Jupyter Notebook</a> 的最佳方式。由于 JupyterHub 为每个用户管理单独的 Jupyter 环境，因此它可以用于一班学生、一个企业数据科学小组或一个科研小组。它是一个多用户 Hub，可以生成、管理和代理单用户 <a target="_blank" rel="noopener" href="https://jupyter-notebook.readthedocs.io/en/latest/">Jupyter Notebook</a> 服务器的多个实例。</p>
+<p>JupyterHub 既可供小型团队（0-100 名用户）使用，也可供大型团队（超过 100 名用户）在协作环境中使用，例如一班学生、企业数据科学小组或科学研究小组。它有两个主要发行版，分别针对每个团队的需求而开发。</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/jupyterhub/the-littlest-jupyterhub">Littlest JupyterHub</a> 发行版适合少量用户（1-100）和具有简单环境的单个服务器 的场景。</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/jupyterhub/zero-to-jupyterhub-k8s">在 k8s 上从 0 部署 jupyterhub</a> 允许您在云上部署动态服务器，适合更多用户 的场景。</li>
+</ol>
+<h5 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h5><p>JupyterHub 由四个子系统组成：</p>
+<ul>
+<li><strong>Hub</strong>（tornado 进程）是 JupyterHub 的核心。</li>
+<li><strong>configurable http proxy</strong> ( node-http-proxy)，用于接收来自客户端浏览器的请求</li>
+<li>由 Spawners 监控的多个 <strong>single-user Jupyter notebook servers</strong> (Python&#x2F;IPython&#x2F;tornado)</li>
+<li>管理用户如何访问系统的 <strong>authentication class</strong></li>
+</ul>
+<p>此外，可以通过文件添加可选配置 <code>config.py</code>，并在管理面板上管理用户的内核。下图显示了整个系统的简化图：</p>
+<img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/jhub-fluxogram.jpeg" alt="JupyterHub 子系统组成" style="zoom:50%;" />
+
+<p>JupyterHub 执行以下功能：</p>
+<ul>
+<li>Hub 启动代理</li>
+<li>代理默认将所有请求转发到 Hub</li>
+<li>Hub 处理用户登录并根据需要生成单用户服务器</li>
+<li>Hub 配置代理以将 URL 前缀转发到单用户笔记本服务器</li>
+</ul>
+<p>为了方便管理 Hub、其用户和服务，JupyterHub 还提供了<a target="_blank" rel="noopener" href="https://jupyterhub.readthedocs.io/en/stable/reference/rest-api.html">REST API</a>。</p>
+<h5 id="使用-2"><a href="#使用-2" class="headerlink" title="使用"></a>使用</h5><p>如何安装使用，就不赘述了，<a target="_blank" rel="noopener" href="https://jupyterhub.readthedocs.io/en/stable/tutorial/index.html">官方使用教程</a> 写的很全。</p>
+<p>如果需要二次开发的话，可以参考 <a target="_blank" rel="noopener" href="https://jupyterhub.readthedocs.io/en/stable/reference/index.html">官方技术文档</a>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Jupyer 项目的社区和生态都是比较成熟的，很适合用来做 数据平台 Notebook 的二次开发。本文介绍了 Jupyter 项目中的各个组件的作用，并简述了原理。通过使用不同的组件可以组合出不同的应用。了解了这些，可以根据自己的工作场景，选择适合的组件进行部署和二次开发。</p>
+</div><div class="tags"><ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jupyter-%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91/" rel="tag">Jupyter 二次开发</a></li></ul></div><div class="post-nav"><a class="pre" href="/2024/08/13/Jupyter-%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF%EF%BC%881%EF%BC%89/">Jupyter 二次开发思路（1）</a><a class="next" href="/2024/08/07/SpringBoot-%E5%90%8E%E7%AB%AF-i18n-%E5%9B%BD%E9%99%85%E5%8C%96%E5%AE%9E%E7%8E%B0/">SpringBoot 后端 i18n 国际化实现</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Java-%E5%90%8E%E7%AB%AF/" style="font-size: 15px;">Java 后端</a> <a href="/tags/DevOps/" style="font-size: 15px;">DevOps</a> <a href="/tags/K8s/" style="font-size: 15px;">K8s</a> <a href="/tags/Jupyter-%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91/" style="font-size: 15px;">Jupyter 二次开发</a> <a href="/tags/%E6%95%99%E7%A8%8B/" style="font-size: 15px;">教程</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 15px;">工具</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 联系我</i></div><ul></ul><a href="mailto:trl2025@163.com" title="Mail" target="_blank">Mail</a><ul></ul><a href="https://github.com/rongliangtang" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://space.bilibili.com/28159312" title="Bilibili" target="_blank">Bilibili</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2024 Tom</div></div></div><script type="text/javascript" src="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js?v=1.0.0" successtext="复制成功！"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css?v=1.0.0"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>

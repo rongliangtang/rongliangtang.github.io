@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="这是RongLiang的博客,用来分享技术知识和一些感悟。"><title>K8s 原理简述 | Tom's Blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="https://unpkg.com/normalize.css"><link rel="stylesheet" type="text/css" href="https://unpkg.com/purecss/build/pure-min.css"><link rel="stylesheet" type="text/css" href="https://unpkg.com/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="https://unpkg.com/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="https://unpkg.com/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="https://unpkg.com/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="https://unpkg.com/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">K8s 原理简述</h1><a id="logo" href="/.">Tom's Blog</a><p class="description">野蛮生长</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa undefined"> 文章</i></a><a href="/archives/"><i class="fa undefined"> 总览</i></a><a href="/about/"><i class="fa undefined"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">K8s 原理简述</h1><div class="post-meta">2024-08-14</div><div class="post-content"><p>在现代云原生环境中，Kubernetes（简称 K8s）是自动部署、扩缩和管理容器化应用程序的开源系统，也是实现云原生的重要工具。这篇文章会从开发工程师的角度去介绍云原生、微服务和 K8s 等内容。不会特别深入，但是掌握它足以提高你的日常开发的效率和架构设计能力。</p>
+<span id="more"></span>
+
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>下面首先对云原生的关键概念进行解释，然后进行简单的总结，最后梳理这些概念之间的关系。</p>
+<h3 id="云原生"><a href="#云原生" class="headerlink" title="云原生"></a>云原生</h3><p>通俗地理解“云原生”就是你在开发和部署应用时，不再把程序固定在某一台服务器或特定的环境上，而是让应用能够充分利用云平台和相关部署工具提供的各种便利，如自动扩展、灵活部署、和高可用性。云原生让你的应用像住在“云”里一样，无论需要多少计算资源，或者哪里出问题，它都能自动调整，始终保持稳定运行。</p>
+<p><strong>云原生的核心特点是容器化、动态管理、微服务、持续集成和交付（CI&#x2F;CD）。</strong> </p>
+<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><p>容器是云原生应用程序中的最小计算单元，计算单元可以简单理解为一个虚拟机。Docker 是常用的容器化技术之一。Docker 就像一个“容器”，你把应用和它需要的所有东西（比如库、环境配置）都打包到这个“容器”里。这样，这个应用就能在任何地方运行，而不会因为环境不同而出问题。Docker 让微服务更容易部署和运行，因为每个服务都可以打包成独立的“容器”，在不同的环境中保持一致。</p>
+<h3 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h3><p>微服务就是，把你的应用拆分成很多“小块”或者“小服务”，每个小服务负责一个特定的功能，比如认证服务、支付服务等。每个小服务可以独立开发、更新、和部署，不会因为其他部分的变化而被影响。在开发者对应用程序进行微调时，可聚焦单个微服务进行处理，更为高效；而在微服务发生故障时，应用程序仍具有连续性。</p>
+<h3 id="K8s"><a href="#K8s" class="headerlink" title="K8s"></a>K8s</h3><p>K8s 是容器编排工具，帮助管理大量容器，确保你的微服务能够在云原生环境中自动扩展、负载均衡、并实现高可用性。</p>
+<p>通俗理解，如果 Docker 容器 是集装箱，那 Kubernetes 就是管理这些集装箱的大脑。它负责自动安排集装箱的“船位”，确保它们有足够的资源来运行，并且如果有一个集装箱出问题了，Kubernetes 会自动启动新的集装箱替补上去，确保应用不会停摆。</p>
+<h3 id="CI-CD"><a href="#CI-CD" class="headerlink" title="CI&#x2F;CD"></a>CI&#x2F;CD</h3><p>通俗地理解，“CI&#x2F;CD” 就是自动化流水线，让代码从开发到上线变得快速且可靠。CI（持续集成）就像一个自动检测工具，每当你提交代码时，它会自动测试和集成，确保代码没有问题。CD（持续交付&#x2F;部署）则是把通过测试的代码自动部署到服务器上，或者随时准备好上线。这样，你可以频繁地更新应用，而不用手动处理每个环节，大大减少了出错的可能性。</p>
+<h3 id="理解关系"><a href="#理解关系" class="headerlink" title="理解关系"></a>理解关系</h3><p>作为一名开发工程师，可以简单理解：</p>
+<ul>
+<li><strong>云原生</strong> 是一种在云上构建和管理应用的方式，强调自动扩展和灵活性。</li>
+<li><strong>微服务</strong> 是一种架构，将应用拆分成多个小服务，每个服务独立运行和管理，更适合在云原生环境中使用。</li>
+<li><strong>容器</strong> 是一个独立的环境，把应用和所有依赖打包在一起，确保它能在任何地方一致运行，常用于运行微服务。</li>
+<li><strong>Kubernetes (K8s)</strong> 是管理容器的工具，它自动处理容器的部署、扩展和故障恢复，确保微服务在云原生环境中平稳运行。</li>
+<li><strong>CI&#x2F;CD</strong> 是自动化代码管理的流程，CI（持续集成）自动测试和合并代码，CD（持续交付&#x2F;部署）自动将通过测试的代码部署到生产环境，支持快速和可靠的发布。</li>
+</ul>
+<p>它们之间的关系，可以这样理解：</p>
+<ul>
+<li><strong>云原生</strong> 利用 <strong>容器</strong> 和 <strong>Kubernetes</strong> 来实现灵活、自动化的应用管理。</li>
+<li><strong>微服务</strong> 是一种架构方法，通常与 <strong>容器</strong> 和 <strong>Kubernetes</strong> 配合使用。</li>
+<li><strong>CI&#x2F;CD</strong> 支持 <strong>云原生</strong> 和 <strong>微服务</strong> 的快速、自动化发布过程，确保代码的持续集成和自动部署。</li>
+</ul>
+<h2 id="K8s-架构"><a href="#K8s-架构" class="headerlink" title="K8s 架构"></a>K8s 架构</h2><p>下图展示了 K8s 的基本架构。Kubernetes 是一个用于管理和编排容器化应用的开源平台，整个系统由多个组件组成，分为 <strong>控制平面</strong> (Control Plane) 和 <strong>工作节点</strong> (Nodes)。</p>
+<p>控制平面是 Kubernetes 的大脑，负责管理集群的整体状态，包括调度、决策、和集群控制。主要组件包括：</p>
+<ul>
+<li><strong>kube-api-server</strong>：Kubernetes API 服务器，是控制平面的核心组件。它接收和处理所有外部请求，如集群管理、调度、配置等，并与 etcd 交互来存储集群的状态数据。所有的控制操作都通过 kube-api-server 进行。它是是集群内各个功能模块之间数据交互和通信的中心枢纽。</li>
+<li><strong>etcd</strong>：一个分布式键值存储系统，用来保存集群的所有状态数据，比如 Pod 信息、节点状态等。etcd 被 kube-api-server 用来持久化集群状态。</li>
+<li><strong>kube-scheduler</strong>：负责根据资源的可用性和约束条件，将新创建的 Pod 分配到合适的节点上。Scheduler 会考虑多种因素，如节点的资源使用情况、负载均衡等。</li>
+<li><strong>kube-controller-manager</strong>：Kubernetes 的控制器管理器，负责控制循环（control loops），持续检查集群的状态，并采取行动以达到所期望的状态。它包括多种控制器，比如节点控制器、复制控制器等。</li>
+<li><strong>cloud-controller-manager</strong>：与云服务提供商集成的控制器，负责管理与底层云基础设施相关的任务，比如负载均衡、存储卷管理等。这是 Kubernetes 云原生能力的体现。云控制器管理器 (cloud-controller-manager) 通过与云提供商的 API 交互，管理 Kubernetes 资源与云服务之间的关系，例如动态创建负载均衡器，自动挂载存储卷等。</li>
+</ul>
+<p>工作节点是运行实际应用负载的地方。每个节点都运行容器化的应用，即 Pod。节点上的主要组件包括：</p>
+<ul>
+<li><strong>kubelet</strong>：运行在每个节点上的代理，它负责管理该节点上的 Pod。kubelet 接受 kube-api-server 的指令，确保指定的容器在节点上运行，并监控它们的状态。</li>
+<li><strong>kube-proxy</strong>：一个网络代理，运行在每个节点上，负责维护网络规则和流量路由。kube-proxy 确保集群内部和外部的网络流量能正确地转发到相应的 Pod。</li>
+<li><strong>Pods</strong>：是 Kubernetes 中的最小计算单元，一个 Pod 包含一个或多个容器（通常是 Docker 容器）。Pod 是直接在节点上运行的实际应用工作负载。</li>
+</ul>
+<p>通过这些组件的协同工作，Kubernetes 能够有效地管理大规模分布式应用，实现自动化部署、扩展和运维。</p>
+<img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/kubernetes-cluster-architecture.svg" alt="Kubernetes 架构（图片来自K8s官网）" style="zoom:65%;" />
+
+<p>也许通过上面的描述，还是不太容易理解 K8s 的运行原理，下面我们通过自问自答的方式，来解决困惑。</p>
+<h3 id="1-Control-Plane-和-Node-是如何通信的？"><a href="#1-Control-Plane-和-Node-是如何通信的？" class="headerlink" title="1. Control Plane 和 Node 是如何通信的？"></a>1. Control Plane 和 Node 是如何通信的？</h3><p>在 Kubernetes 中，<strong>Control Plane</strong> 是集群的大脑，负责管理整个集群的状态和行为。而 <strong>Node</strong> 是集群中实际运行应用的工作节点。两者之间的通信通过以下关键组件实现：</p>
+<ul>
+<li><strong>kube-apiserver</strong>：这是 Control Plane 的核心组件，提供了集群管理的 API 接口。kube-apiserver 是整个集群中各个模块之间数据交互和通信的中心枢纽。它不仅负责处理和转发来自其他组件的请求，还提供了集群的安全机制，确保数据传输的安全性。</li>
+<li><strong>kubelet</strong>：每个 Node 上都会运行一个称为 kubelet 的进程。kubelet 是负责 Node 与 Control Plane 之间通信的关键组件。它向 Control Plane 汇报节点的运行状态，包括节点的注册、终止以及定时的健康检查。同时，kubelet 还接收来自 Control Plane 的命令，负责在该节点上创建和管理 Pod。</li>
+</ul>
+<p>在 Kubernetes 中，<strong>Pod</strong> 是最基本的操作单元，与 Docker 中的容器有一些不同。一个 Pod 可能包含一个或多个容器，这些容器共享同一个网络命名空间和存储卷。Pod 内的容器可以通过 <code>localhost</code> 直接互相通信和共享网络资源。</p>
+<p>当一个 Pod 启动时，首先会启动一个 <strong>Pause 容器</strong>。这个容器的主要作用是为 Pod 创建一个独立的网络命名空间，Pod 内的其他容器通过加入这个命名空间来共享网络配置。这种设计使得 Pod 内的所有容器能够在同一个网络环境下协同工作。</p>
+<h3 id="2-Control-Plane-如何将-Pod-调度到指定的-Node-上的？"><a href="#2-Control-Plane-如何将-Pod-调度到指定的-Node-上的？" class="headerlink" title="2. Control Plane 如何将 Pod 调度到指定的 Node 上的？"></a>2. Control Plane 如何将 Pod 调度到指定的 Node 上的？</h3><p>在 Kubernetes 中，<strong>Pod</strong> 的调度是由 <strong>kube-scheduler</strong> 负责的。kube-scheduler 是 Kubernetes 中的一个关键组件，它的主要任务是根据集群的当前状态，决定每个新创建的 Pod 应该运行在哪个 Node 上。整个调度过程涉及一系列复杂的算法，这些算法会根据资源需求、节点负载、网络延迟等多个因素，为每个 Pod 选择一个最佳的目标 Node。</p>
+<p>如果你希望将 Pod 调度到某个特定的 Node 上，这可以通过 <strong>节点标签（Label）</strong> 和 <strong>Pod 的 NodeSelector 属性</strong> 来实现。节点标签是一些键值对，用于标识和分类 Node。通过在 Pod 的定义中设置 <strong>NodeSelector</strong>，你可以指定 Pod 只能被调度到带有特定标签的节点上。这样，kube-scheduler 就会根据标签匹配来选择合适的节点，从而将 Pod 调度到你指定的 Node 上。</p>
+<h3 id="3-各个-Node、Pod-的信息存放在哪里？"><a href="#3-各个-Node、Pod-的信息存放在哪里？" class="headerlink" title="3. 各个 Node、Pod 的信息存放在哪里？"></a>3. 各个 Node、Pod 的信息存放在哪里？</h3><p>在 Kubernetes 中，为了实现 Pod 的调度，需要了解每个 Node 的资源使用情况、健康状态，以及每个 Pod 的基本信息。那么这些信息是存放在哪里的呢？</p>
+<p>Kubernetes 使用一个名为 <strong>etcd</strong> 的组件作为高可用和强一致性的分布式存储库。etcd 是一个键值存储系统，它保存了集群中的所有配置信息和状态数据。etcd 可以内置在 Kubernetes 集群中，也可以作为外部服务独立部署。</p>
+<p>所有关于集群的信息，包括节点的资源状况、Pod 的状态等，都会被存储在 etcd 中。为了保证各个组件的独立性和集群的易维护性，所有对这些数据的增、删、改、查操作都统一通过 <strong>kube-apiserver</strong> 来进行。<strong>kube-apiserver</strong> 是 Kubernetes 的核心组件，它负责管理集群的所有 API 请求，既为内部组件提供服务，也对外部用户提供访问接口。</p>
+<p>外部用户可以通过 REST API 或者 <code>kubectl</code> 命令行工具来管理集群。无论是通过 REST API 还是 <code>kubectl</code>，这些请求最终都会与 kube-apiserver 进行通信。kube-apiserver 会从 etcd 中读取或写入集群信息，并与其他组件交互。可以说，kube-apiserver 是整个集群中各个功能模块之间数据交互和通信的中心枢纽。</p>
+<h3 id="4-外部的用户如何访问集群内运行的-Pod？"><a href="#4-外部的用户如何访问集群内运行的-Pod？" class="headerlink" title="4. 外部的用户如何访问集群内运行的 Pod？"></a>4. 外部的用户如何访问集群内运行的 Pod？</h3><p>首先，让我们回顾一下 Docker 容器是如何对外提供访问的。在 Docker 的 bridge 网络模式下，每个容器都会分配一个虚拟 IP 地址，这个 IP 地址在宿主机之外是无法直接访问的。为了让外部能够访问容器内部的服务，我们通常会设置端口映射，将容器内部的端口绑定到宿主机的端口上。这样，外部用户可以通过访问宿主机的指定端口，来访问容器内部的服务。</p>
+<p>在 Kubernetes 中，外部访问会稍微复杂一些。这是因为 Docker 的端口映射通常只适用于单机环境，而 Kubernetes 是一个分布式集群，通常一个服务是由多个相同的 Pod 提供的，以分担访问压力。这些 Pod 可能分布在不同的节点上，因此还涉及到跨节点的通信问题。</p>
+<p>为了解决这个问题，Kubernetes 引入了 <strong>Service</strong> 的概念。Service 是一个抽象，它将多个相同的 Pod 组合在一起，并对外提供一个统一的访问入口。当创建一个 Pod 时，会为其设置一些标签（labels），而 Service 使用 <strong>选择器（Selector）</strong> 根据这些标签来识别属于同一个服务的所有 Pod，并将它们作为一个整体对外提供服务。</p>
+<p>当 Service 被创建时，Kubernetes 会将这个服务的配置信息通过 <strong>kube-apiserver</strong> 存储到 <strong>etcd</strong> 中，管理这个过程的是 <strong>Service Controller</strong>，它是 <strong>kube-controller-manager</strong> 内部的一个控制器。此外，为了确保服务能够跨节点访问，Kubernetes 在每个节点上都会运行一个 <strong>kube-proxy</strong> 进程。<strong>kube-proxy</strong> 负责将对 Service 的请求代理到对应的 Pod 上，并且实现负载均衡，将流量分发给多个 Pod，从而确保服务的高可用性。</p>
+<p>总结来说，Kubernetes 通过 Service 将分布在集群中的多个 Pod 统一为一个对外的服务，并通过 kube-proxy 实现跨节点的通信和负载均衡，使外部用户可以方便地访问集群内的应用。</p>
+<h3 id="5-Pod-如何实现动态扩容和缩放？"><a href="#5-Pod-如何实现动态扩容和缩放？" class="headerlink" title="5. Pod 如何实现动态扩容和缩放？"></a>5. Pod 如何实现动态扩容和缩放？</h3><p>如前所述，一个服务通常由多个 Pod 提供支持，因此，服务的扩容实际上就是增加 Pod 的数量，而在负载减小时则减少 Pod 的数量，以保持合适的副本数。</p>
+<p>在 Kubernetes 中，这个过程主要由 <strong>Deployment</strong> 来管理。Deployment 是一个 Kubernetes 资源定义，它定义了应用的期望状态，包括要运行的 Pod 副本数量。当实际运行的 Pod 数量与定义的副本数不符时，Deployment 会通过 <strong>ReplicaSet 控制器</strong> 自动调整 Pod 的数量，确保实际副本数与期望值一致。</p>
+<p>这个期望的副本数可以由我们手动设置，也可以通过 <strong>Horizontal Pod Autoscaler (HPA)</strong> 这种自动扩容机制来动态调整。HPA 会根据应用的实际负载（如 CPU 和内存使用情况）自动调整 Deployment 中 Pod 的副本数。当负载增加时，HPA 会增加 Pod 的数量；当负载减小时，则减少 Pod 的数量。</p>
+<p>总的来说，Kubernetes 通过 定义 Deployment 管理 Pod 的副本数，并结合 HPA 实现根据实际负载的自动扩容和缩放，以适应不同的资源需求。</p>
+<h3 id="6-各个组件之间是如何协作的？"><a href="#6-各个组件之间是如何协作的？" class="headerlink" title="6. 各个组件之间是如何协作的？"></a>6. 各个组件之间是如何协作的？</h3><p>我们已经了解到，<strong>etcd</strong> 是 Kubernetes 集群中用来存储所有数据的分布式数据库，它作为集群的“数据中心”保存了集群的所有状态信息。<strong>kube-apiserver</strong> 是管理这个数据中心的核心组件，负责处理所有与数据相关的请求，同时充当其他组件与 etcd 之间的“桥梁”。</p>
+<p>在 Kubernetes 中，<strong>kube-controller-manager</strong> 是一个重要的守护进程，它管理了集群中的所有控制器（Controller）。控制器是一种持续运行的逻辑，每个控制器都会不断地监视集群的状态，确保集群的实际状态与期望状态一致。如果发现差异，控制器会尝试做出调整。</p>
+<p><strong>Service Controller</strong> 负责管理 Service 对象，确保服务与其背后的 Pod 正常通信；<strong>ReplicaSet</strong> 确保每个应用运行的 Pod 副本数量保持在预期的范围内。除了这些，kube-controller-manager 还包括了许多其他控制器，例如：</p>
+<ul>
+<li><strong>Node Controller</strong>：管理节点（Node）的状态，监控节点的健康状况，并在节点故障时采取相应措施。</li>
+<li><strong>ResourceQuota Controller</strong>：管理集群中命名空间（Namespace）内的资源配额，确保资源使用不会超过限制。</li>
+<li><strong>Namespace Controller</strong>：管理命名空间的生命周期，确保命名空间的创建和删除正确执行。</li>
+</ul>
+<p>通过 <strong>kube-controller-manager</strong>，Kubernetes 能够自动化地管理集群中的各种资源，确保系统始终处于预期状态。</p>
+<h3 id="7-Control-Plane-和-Node-在运行时是如何分布的？"><a href="#7-Control-Plane-和-Node-在运行时是如何分布的？" class="headerlink" title="7. Control Plane 和 Node 在运行时是如何分布的？"></a>7. Control Plane 和 Node 在运行时是如何分布的？</h3><p>在 Kubernetes 中，<strong>Control Plane</strong> 和 <strong>Node</strong> 的分布方式是高度灵活且可配置的。</p>
+<p><strong>Control Plane</strong> 是 Kubernetes 集群的“大脑”，负责管理和控制整个集群的状态和行为。它由多个核心组件组成，包括 kube-apiserver、etcd、kube-scheduler、kube-controller-manager 和 cloud-controller-manager 等。</p>
+<ul>
+<li><strong>单节点模式</strong>：在开发或测试环境中，Control Plane 的所有组件通常会部署在一台机器上。这种方式设置简单，便于管理，但不具备高可用性。</li>
+<li><strong>高可用模式</strong>：在生产环境中，为了确保高可用性，Control Plane 通常会部署在多台机器上（通常是奇数个，如 3 台或 5 台），每台机器上运行完整的一套 Control Plane 组件。这种配置确保即使部分 Control Plane 节点发生故障，集群依然能够正常运行。</li>
+</ul>
+<p><strong>Node</strong>（也称为工作节点）是 Kubernetes 集群中实际运行应用程序的地方。每个 Node 都运行关键组件，如 kubelet、kube-proxy 和容器运行时（如 Docker 或 containerd）。</p>
+<ul>
+<li>每个 <strong>Node</strong> 通常部署在一台独立的机器上，可以是物理服务器、虚拟机或云上的实例。Node 负责运行 Pod，并执行来自 Control Plane 的指令。</li>
+<li>Kubernetes 集群可以包含多个 Node，Pod 会根据调度策略分布在不同的 Node 上，从而实现应用的高可用性和负载均衡。</li>
+</ul>
+<p>Control Plane 中的组件在运行时的分布方式如下：</p>
+<ul>
+<li><strong>kube-apiserver</strong>：通常每个 Control Plane 节点都会运行一个 kube-apiserver 实例，用于处理所有 API 请求。由于 kube-apiserver 是无状态的，可以在多个节点上运行，并通过负载均衡器进行请求分发。</li>
+<li><strong>etcd</strong>：etcd 是一个分布式键值存储系统，负责存储 Kubernetes 集群的所有状态信息。为了确保数据的高可用性和一致性，etcd 通常以集群的形式运行在多个 Control Plane 节点上。</li>
+<li><strong>kube-scheduler 和 kube-controller-manager</strong>：这些组件通常在每个 Control Plane 节点上都运行，但通过 leader 选举机制确保只有一个实例在执行调度和控制任务，其他实例作为备份。</li>
+<li><strong>cloud-controller-manager</strong>（如果集群部署在云上时有）：通常也部署在 Control Plane 节点上，负责与底层云提供商的 API 进行交互。</li>
+</ul>
+<p>Node 中的组件在运行时的分布方式如下：</p>
+<ul>
+<li><strong>kubelet</strong>：每个 Node 上都会运行一个 kubelet 进程，负责与 Control Plane 进行通信，并管理该节点上的 Pod 和容器。</li>
+<li><strong>kube-proxy</strong>：每个 Node 上也会运行一个 kube-proxy 进程，负责实现 Service 的网络代理和负载均衡功能。</li>
+<li><strong>容器运行时</strong>：每个 Node 上还会运行容器运行时（如 Docker 或 containerd），用于实际启动和管理容器。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文首先介绍了云原生中的一些基本概念，并介绍了这些概念之间的关系。然后还介绍了 K8s 的架构，并通过自问自答的方式来理解这个架构是如何运行的。需要注意的是，我们介绍的是整体的原理，了解这些足够帮助我们理解如何使用 K8s，对开发工程师会所帮助。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/ebook/440/read?spm=a2c6h.26392459.ebook-detail.4.719fe741u2keu5">阿里云云原生架构白皮书2022版</a><br><a target="_blank" rel="noopener" href="https://www.amazonaws.cn/knowledge/what-is-cloud-native/">AWS 对云原生的定义</a><br><a target="_blank" rel="noopener" href="https://kubernetes.io/zh-cn/docs/home/">K8s 官方文档</a><br><a target="_blank" rel="noopener" href="https://kubernetes.feisky.xyz/">Kubernetes 指南</a><br><a target="_blank" rel="noopener" href="https://www.51cto.com/article/714050.html">关于 Kubernetes 架构原理，这是我看过最清晰明了的一篇</a><br><a target="_blank" rel="noopener" href="https://xie.infoq.cn/article/93db4049ae4472de95717f3a4">一文读懂 K8s 工作原理</a></p>
+</div><div class="tags"><ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DevOps/" rel="tag">DevOps</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/K8s/" rel="tag">K8s</a></li></ul></div><div class="post-nav"><a class="pre" href="/2024/08/19/%20%E5%8A%A8%E6%89%8B%E7%BB%83%E4%B9%A0-K8s/">动手练习 K8s</a><a class="next" href="/2024/08/13/Jupyter-%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF%EF%BC%881%EF%BC%89/">Jupyter 二次开发思路（1）</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Java-%E5%90%8E%E7%AB%AF/" style="font-size: 15px;">Java 后端</a> <a href="/tags/DevOps/" style="font-size: 15px;">DevOps</a> <a href="/tags/K8s/" style="font-size: 15px;">K8s</a> <a href="/tags/Jupyter-%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91/" style="font-size: 15px;">Jupyter 二次开发</a> <a href="/tags/%E6%95%99%E7%A8%8B/" style="font-size: 15px;">教程</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 15px;">工具</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 联系我</i></div><ul></ul><a href="mailto:trl2025@163.com" title="Mail" target="_blank">Mail</a><ul></ul><a href="https://github.com/rongliangtang" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://space.bilibili.com/28159312" title="Bilibili" target="_blank">Bilibili</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2024 Tom</div></div></div><script type="text/javascript" src="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js?v=1.0.0" successtext="复制成功！"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css?v=1.0.0"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>

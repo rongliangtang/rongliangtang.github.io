@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="这是RongLiang的博客,用来分享技术知识和一些感悟。"><title>企业网站快速搭建教程 | Tom's Blog</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=1.0.0"><link rel="stylesheet" type="text/css" href="https://unpkg.com/normalize.css"><link rel="stylesheet" type="text/css" href="https://unpkg.com/purecss/build/pure-min.css"><link rel="stylesheet" type="text/css" href="https://unpkg.com/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="https://unpkg.com/jquery/dist/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><script type="text/javascript" src="https://unpkg.com/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="https://unpkg.com/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="https://unpkg.com/toastr/build/toastr.min.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">企业网站快速搭建教程</h1><a id="logo" href="/.">Tom's Blog</a><p class="description">野蛮生长</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa undefined"> 文章</i></a><a href="/archives/"><i class="fa undefined"> 总览</i></a><a href="/about/"><i class="fa undefined"> 关于</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">企业网站快速搭建教程</h1><div class="post-meta">2024-07-25</div><div class="post-content"><h2 id="简言"><a href="#简言" class="headerlink" title="简言"></a>简言</h2><p>因为最近有个小型企业网站搭建的需求，所以查阅了相关资料，总结了一套快速搭建企业站的方法。结合之前利用wordpress搭建博客的经验，想到搭建这种内容型的网站，通过自己编写前后台太耗时了，所以利用cms内容管理系统来建站是最快最简单的方法了。因为网站面向的是国内用户，对访问速度有一定的要求，并且企业网站肯定要一个域名，所以自己买一个服务器和域名是必须的。又因为服务器备案比较麻烦，所买个香港的服务器会省事一些，既不用备案，又能满足访问速度的要求。</p>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.huaweicloud.com/">华为云香港服务器</a>：因为我的是小型企业网站，访客数不多，所以用的是1M带宽2G运行内存40G存储内存配置的服务器。对比了阿里云、腾讯云和华为云香港服务器价格，华为云在做活动最便宜，100块钱买了一年。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/">腾讯云域名</a>：一直在用腾讯云，还是很值得信赖，除了价格有点贵，其它没啥毛病。域名还可以，com域名首年半价36一年。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.pbootcms.com/">Pbootcms</a>：最近挺火的一个中文cms系统，专门用来做企业站的，免费还开源，主要模版多，简单好用，一直在更新维护，安全性有保障。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.bt.cn/">宝塔面板</a>：非常好用的一个服务器管理系统，简单化了服务器管理流程，嘎嘎好用😊。</p>
+</li>
+</ul>
+<h2 id="快速搭建企业站教程"><a href="#快速搭建企业站教程" class="headerlink" title="快速搭建企业站教程"></a>快速搭建企业站教程</h2><ol>
+<li><p>购买服务器</p>
+<p>我这里购买的是香港的服务器，不用备案。当然用国内的也没问题，就是要备案会麻烦一点。买服务器简单，去腾讯云、阿里云或华为云这些大网站买就没错，然后根据你的访客量来选配置。</p>
+</li>
+<li><p>购买域名</p>
+<p>和买服务器一样，去腾讯云、阿里云或华为云这些大网站买就没错，不过建议企业站还是买com域名会专业点就是。</p>
+</li>
+<li><p>安装宝塔面板</p>
+<p>安装宝塔面板很傻瓜化的，去官网有教程的，点击下面链接看看就知道了，搭建好了如下图所示(隐私信息已打码)。</p>
+<p><a target="_blank" rel="noopener" href="https://www.bt.cn/new/download.html">官方安装宝塔教程</a></p>
+<p><img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/image-20220828223704261.png" alt="image-20220828223704261"></p>
+</li>
+<li><p>安装Pbootcms</p>
+<p>Pbootcms安装在官网也有教程，照着操作来就没问题，网上资料也挺多，碰到问题百度就完事儿。</p>
+<p><a target="_blank" rel="noopener" href="https://www.pbootcms.com/docs/">官方安装Pbootcms教程</a></p>
+</li>
+<li><p>套模版</p>
+<p>Pbootcms的模版很多，上淘宝搜“Pbootcms模版”，两块钱就能买到很多模版，像安装Pbootcms一样，直接把模版放上服务器就完事儿，上传完模版记得做好配置就行，搭建好了如下图所示(隐私信息已打码)。</p>
+<p>电脑端：</p>
+<p><img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/image-20220828223905772.png" alt="image-20220828223905772"></p>
+<p>手机端：</p>
+<img src="https://blog-1259405505.cos.ap-guangzhou.myqcloud.com/image-20220828224034711.png" alt="手机端演示" width=60%/></li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>利用Pbootcms和宝塔面板来搭建企业站真的是非常省事，如果自己完整写一个前台后台得花挺多时间的。如果在搭建的过程中遇到什么问题，欢迎联系交流🙋‍♂️。</p>
+</div><div class="tags"><ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%99%E7%A8%8B/" rel="tag">教程</a></li></ul></div><div class="post-nav"><a class="pre" href="/2024/08/01/Ubuntu%20%E5%91%BD%E4%BB%A4%E8%A1%8C%E5%AE%9E%E7%8E%B0%E8%B5%B0%E4%BB%A3%E7%90%86/">Ubuntu 通过命令行实现走代理</a><a class="next" href="/2024/07/24/%E5%8D%9A%E5%AE%A2%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/">博客快速搭建教程</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Java-%E5%90%8E%E7%AB%AF/" style="font-size: 15px;">Java 后端</a> <a href="/tags/DevOps/" style="font-size: 15px;">DevOps</a> <a href="/tags/K8s/" style="font-size: 15px;">K8s</a> <a href="/tags/Jupyter-%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91/" style="font-size: 15px;">Jupyter 二次开发</a> <a href="/tags/%E6%95%99%E7%A8%8B/" style="font-size: 15px;">教程</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 15px;">工具</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 联系我</i></div><ul></ul><a href="mailto:trl2025@163.com" title="Mail" target="_blank">Mail</a><ul></ul><a href="https://github.com/rongliangtang" title="GitHub" target="_blank">GitHub</a><ul></ul><a href="https://space.bilibili.com/28159312" title="Bilibili" target="_blank">Bilibili</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2024 Tom</div></div></div><script type="text/javascript" src="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=1.0.0" async></script><link rel="stylesheet" type="text/css" href="https://unpkg.com/@fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js?v=1.0.0" successtext="复制成功！"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css?v=1.0.0"><script type="text/javascript" src="/js/codeblock-resizer.js?v=1.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=1.0.0"></script></div></body></html>
